@@ -1,0 +1,14 @@
+
+<script type="text/javascript" th:inline="javascript">
+window.onload = function() {
+	var result = /*[[${result}]]*/ 0;
+	setTimeout(function() {
+		if ( result > 0 ) {
+			alert("[[${seq}]]번 상품 수정 성공");
+		} else {
+			alert("[[${seq}]]번 상품 수정 실패");
+		}
+		location.href = "/store/store_board_view?seq=[[${seq}]]&pg=[[${pg}]]";
+	}, 100)
+}
+</script>

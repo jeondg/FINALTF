@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<style type="text/css">
+.paging { color: blue; text-decoration: none;}
+.currentPaging { color: red; text-decoration: none;}
+.subjectA {
+	color: blue;
+	text-decoration: none;
+}
+
+.subjectA:hover {
+	color: #01bde7; text-decoration: none;
+}
+</style>
+
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+
+
+<div class="container">
+<h3>나의 문의 내역</h3>
+<hr>
+<ul><li style="width: 500px;">고객센터를 통해 남기신 1:1 문의내역을 확인하실 수 있습니다.</li></ul><br>
+<table border="1" class="table" style="width: 660px;">
+	<tr class="table-secondary" align="center">
+		<td>번호</td>
+		<td>유형</td>
+		<td>제목</td>
+		<td>답변상태</td>
+		<td>등록일</td>
+
+	</tr>
+
+	<tr th:each="dto : ${list}" align="center">
+		<td>[[${dto.seq}]]</td>
+		<td>[[${dto.question_type}]]</td>
+		<td><a th:href="@{/mypage/question_board_view(pg=${pg}, seq=${dto.seq})}"
+		 class="subjectA">[[${dto.subject}]]</a></td>
+		 <td>[[${dto.question_stat}]]</td>
+		<td>[[${dto.logtime}]]</td>
+	</tr>
+	
+	<tr>
+		<td colspan="5" align="center">
+			<span th:if="${startPage > 3}">
+				<a th:href="@{/mypage/question_board_user_list(pg=${startPage-1})}"
+				 class="paging">[이전]</a>
+			</span>
+			
+			<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+				<span th:if="${pg == i}">
+					[<a th:href="@{/mypage/question_board_user_list(pg=${i})}"
+					 class="currentPaging">[[${i}]]</a>]
+				</span>
+				<span th:if="${pg != i}">
+					[<a th:href="@{/mypage/question_board_user_list(pg=${i})}"
+					 class="paging">[[${i}]]</a>]
+				</span>
+			</span>
+			
+			<span th:if="${endPage < totalP}">
+				<a th:href="@{/mypage/question_board_user_list(pg=${endPage+1})}"
+				 class="paging">[다음]</a>
+			</span>
+		</td>
+
+	</tr>
+	<tr>
+		<td colspan="5" align="right">
+			<a th:href="@{/customerServiceMain/question_board_writeForm}" class="btn btn-primary">
+				문의하러가기
+			</a>
+		</td>
+	</tr>
+</table>
+
+</div>
+</body>
+</html>

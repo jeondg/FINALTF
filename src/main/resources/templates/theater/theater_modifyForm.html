@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+function checkInput() {
+	var frm = document.form1;
+	if (!frm.theater_name.value) {
+		alert("극장 이름을 입력하세요");
+		frm.theater_name.focus();
+		return false;
+	}
+	if (!frm.theater_phone.value) {
+		alert("극장 연락처를 입력하세요");
+		frm.theater_phone.focus();
+		return false;
+	}
+	frm.submit();
+}
+</script>
+</head>
+<body>
+<div class="container">
+	<form action="/theater/theater_modify" name="form1" method="post"
+	 enctype="multipart/form-data">
+	 	<h3>극장 등록</h3>
+	 	<input type="hidden" name="pg" th:value="${pg}">
+	 	<input type="hidden" name="seq" th:value="${seq}">
+		<table border="1" style="width: 500px; margin: auto;" class="table">
+			<tr>
+				<td>극장명</td>
+				<td><input type="text" name="theater_name" size="42"
+				 th:value="${theater.theater_name}"></td>
+			</tr>
+			<tr>
+				<td>극장 연락처</td>
+				<td><input type="text" name="theater_phone" size="42"
+				 th:value="${theater.theater_phone}"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<!-- DTO의 image1과 똑같은 이름을 사용하면 안된다. -->
+					<input type="file" name="theater_img" size="42">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="극장수정"
+					 onclick="checkInput()">
+					<input type="reset" value="다시작성">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><a href="/theater/theater_list">목록</a></td>
+			</tr>
+		</table>
+	</form>
+</div>
+</body>
+</html>

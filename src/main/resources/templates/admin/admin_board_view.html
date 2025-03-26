@@ -1,0 +1,36 @@
+
+<script type="text/javascript">
+	function isDelete() {
+		if (confirm("정말 삭제하시겠습니까?")) {
+			location.href = "/admin/admin_board_delete?pg=[[${pg}]]&seq=[[${seq}]]";
+		}
+	}
+</script>
+
+<div class="container">
+	<form action="" name="form1">
+		<table border="1" class="table" style="width: 540px;">
+			<tr>
+				<td colspan="2">[[${board.subject}]]</td>
+			</tr>
+			<tr>
+				<td>공지 종류 : [[${board.section}]]</td>
+				<td>글 번호 : [[${board.seq}]]</td>
+			</tr>
+			<tr height="200">
+				<td colspan="2" valign="top">
+					<pre>[[${board.content}]]</pre>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="목록"
+					 th:onclick="location.href='/admin/admin_board_list?pg=[[${pg}]]'">
+					<input type="button" value="삭제" onclick="isDelete()">
+					<input type="button" value="수정"
+					 th:onclick="location.href='/admin/admin_board_modifyForm?pg=[[${pg}]]&seq=[[${board.seq}]]'">
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

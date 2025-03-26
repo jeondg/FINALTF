@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>결제 성공</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      padding-top: 100px;
+    }
+    h1 {
+      color: #2ecc71;
+    }
+    p {
+      font-size: 18px;
+      color: #333;
+    }
+    a {
+      margin-top: 20px;
+      display: inline-block;
+      text-decoration: none;
+      color: #3498db;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>결제가 성공적으로 완료되었습니다 🎉</h1>
+  <p>결제 정보를 처리 중입니다...</p>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get("orderId");
+    const paymentKey = urlParams.get("paymentKey");
+    const amount = urlParams.get("amount");
+    const orderType = urlParams.get("orderType") || "movie";
+
+    if (!orderId || !paymentKey || !amount) {
+      alert("필수 결제 정보가 누락되었습니다.");
+      location.href = "/fail.html?message=결제정보누락";
+    }
+
+    const confirmUrl = orderType === "store" ? "/confirm-store" : "/confirm";
+
+    fetch(confirmUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        orderId,
+        paymentKey,
+        amount,
+        orderType
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        document.querySelector("p").textContent = "결제 처리 완료! 감사합니다.";
+      } else if (data.status === "seat_conflict") {
+        alert("선택하신 좌석은 이미 예매되었습니다.");
+        location.href = "/fail.html?message=좌석중복";
+      } else {
+        alert("결제 처리 중 오류가 발생했습니다.");
+        location.href = "/fail.html?message=결제처리실패";
+      }
+    })
+    .catch(err => {
+      console.error("❌ 결제 처리 오류:", err);
+      location.href = "/fail.html?message=서버오류";
+    });
+  </script>
+
+  <a href="/main">메인으로 돌아가기</a>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+window.onload = function() {
+	var result = "[[${result}]]";
+	setTimeout(function() {
+		if (result > 0) {
+			alert("[[${theater_code}]] 극장 [[${screen_num}]]번 상영관 수정 완료");
+		} else {
+			alert("[[${theater_code}]] 극장 [[${screen_num}]]번 상영관 수정 실패");
+		}
+		location.href = "/theater/screen/screen_view?pg=[[${pg}]]&seq=[[${seq}]]&screen_pg=[[${screen_pg}]]&screen_num=[[${screen_num}]]&theater_code=[[${theater_code}]]";
+	}, 100)
+}
+</script>
+</head>
+<body>
+
+</body>
+</html>

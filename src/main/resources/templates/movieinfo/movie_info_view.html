@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+	function isDelete() {
+		if (confirm("정말 삭제하시겠습니까?")) {
+			location.href = "/movieinfo/movie_info_delete?pg=[[${pg}]]&seq=[[${seq}]]";
+		}
+	}
+</script>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+
+<div class="container">
+	<table class="table">
+		<tr>
+			<td align="center">예고편</td>
+			<td>
+				<iframe width="560" height="315" th:src="${info.trailer}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">영화 제목</td>
+			<td>
+				<input type="text" name="title" th:value="${info.title}" readonly>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">영화 줄거리</td>
+			<td valign="top" align="left">
+				<pre>[[${info.synopsis}]]</pre>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">영화 감독</td>
+			<td>
+				<input type="text" name="director" th:value="${info.director}">
+			</td>
+		</tr>
+		<tr>
+			<td align="center">제작 국가</td>
+			<td>
+				<input type="text" name="country" th:value="${info.country}" readonly>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">상영 시간</td>
+			<td>
+				<input type="text" name="runningtime" th:value="${info.runningtime}" readonly>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">상영 등급</td>
+			<td>
+				<input type="text" name="agerating" th:value="${info.agerating != 0 ? info.agerating : '전체이용가'}" readonly>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">영화 장르</td>
+			<td>
+				<input type="text" name="genre" th:value="${info.genre}">
+			</td>
+		</tr>
+		<tr>
+			<td align="center">영화 개봉일</td>
+			<td>
+				<input type="text" name="releasedate" th:value="${info.releasedate}">
+			</td>
+		</tr>
+		<tr>
+			<td align="center">출연 배우진</td>
+			<td valign="top" align="left">
+				<pre>[[${info.actors}]]</pre>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="button" value="영화목록"
+				 th:onclick="location.href='/movieinfo/movie_info_list?pg=[[${pg}]]'">
+				<input type="button" value="사진목록"
+				 th:onclick="location.href='/stillcut/stillcut_list?pg=1&moviecode=[[${seq}]]'"> 
+				<input type="button" value="수정"
+				 th:onclick="location.href='/movieinfo/movie_info_modifyForm?pg=[[${pg}]]&seq=[[${seq}]]'">
+				<input type="button" value="삭제" onclick="isDelete()">
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

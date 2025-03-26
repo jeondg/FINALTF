@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+.paging {
+	color: blue;
+	text-decoration: none;
+}
+.currentPaging {
+	color: red;
+}
+</style>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<div class="container" style="width: 800px; margin:auto;">
+
+<table border="1" class="table" style="width: 800px; margin:auto;">
+	<tr align="center" class="table-primary">
+		<td>번호</td>
+		<td>영화명</td>
+		<td>감독</td>
+		<td>상영등급</td>
+		<td>개봉일</td>
+	</tr>
+	<tr th:each="dto : ${list}" align="center">
+		<td>[[${dto.moviecode}]]</td>
+		<td><a th:href="@{/movieinfo/movie_info_view(pg=${pg}, seq=${dto.moviecode})}">[[${dto.title}]]</a></td>
+		<td>[[${dto.director}]]</td>
+		<td th:text="${dto.agerating != 0 ? dto.agerating : '전체 이용가'}"></td>
+		<td>[[${dto.releasedate}]]</td>
+	</tr>
+	<tr align="center">
+		<td colspan="5">
+			<span th:if="${startPage > 3}">
+				<a th:href="@{/movieinfo/movie_info_list(pg=${startPage-1})}"
+				 class="paging">[이전]</a>
+			</span>
+			<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+				<span th:if="${pg == i}">
+					[<a th:href="@{/movieinfo/movie_info_list(pg=${i})}"
+					 class="currentPaging">[[${i}]]</a>]
+				</span>
+				<span th:if="${pg != i}">
+					[<a th:href="@{/movieinfo/movie_info_list(pg=${i})}"
+					 class="paging">[[${i}]]</a>]
+				</span>				
+			</span>
+			<span th:if="${endPage < totalP}">
+				<a th:href="@{/movieinfo/movie_info_list(pg=${endPage+1})}"
+				 class="paging">[다음]</a>
+			</span>
+		</td>
+	</tr>
+</table>
+<a href="/movieinfo/movie_info_writeForm">영화 등록</a>
+</div>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

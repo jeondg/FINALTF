@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>스토어 상품 결제</title>
+<link rel="stylesheet"
+	href="https://js.tosspayments.com/v2/payment-widget/payment-widget.css" />
+<script src="https://js.tosspayments.com/v2/standard"></script>
+<style>
+body {
+	background-color: #f5f8ff;
+	font-family: Arial, sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	padding-top: 50px;
+}
+
+.wrapper {
+	background-color: #fff;
+	border-radius: 12px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	width: 500px;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+#payment-button {
+	background-color: #3182f6;
+	border: none;
+	color: white;
+	padding: 10px;
+	width: 100%;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 8px;
+	margin-top: 20px;
+}
+
+.checkable {
+	margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+	<div class="wrapper">
+		<h2>스토어 상품 결제</h2>
+		<p>
+			<strong>결제 금액:</strong> <span id="final-amount">불러오는 중...</span>
+		</p>
+		<div id="payment-method"></div>
+		<div id="agreement"></div>
+		<div class="checkable">
+			<label for="coupon-box"> <input id="coupon-box"
+				type="checkbox" /> <span>5,000원 쿠폰 적용</span>
+			</label>
+		</div>
+		<button id="payment-button">결제하기</button>
+	</div>
+
+<script th:inline="javascript">
+  	const orderId = /*[[${orderId}]]*/ "UNKNOWN"; // 임시 fallback
+  	const amount = /*[[${totalPrice}]]*/ 0;
+    let finalAmount = amount;
+
+    document.getElementById("final-amount").textContent = amount.toLocaleString() + "원";
+
+    const tossPayments = TossPayments("test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"); // ✅ 토스 테스트 클라이언트 키
+    const widgets = tossPayments.widgets({ customerKey: orderId });
+
+    widgets.setAmount({ currency: "KRW", value: amount }).catch(console.error);
+    widgets.renderPaymentMethods({ selector: "#payment-method", variantKey: "DEFAULT" });
+    widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" });
+
+    // ✅ 결제 버튼 클릭 이벤트
+	document.getElementById("payment-button").addEventListener("click", async function () {
+	  try {
+	    await widgets.requestPayment({
+	      orderId: orderId,
+	      orderName: "스토어 상품",
+	      successUrl: `${window.location.origin}/success.html?orderId=${orderId}&orderType=store&amount=${finalAmount}`,
+		  // ✅ 이건 반드시 중괄호 포함
+	      failUrl: `${window.location.origin}/fail.html`,
+	      customerEmail: "customer@shop.com",
+	      customerName: "스토어회원",
+	      customerMobilePhone: "01012345678"
+	    });
+	  } catch (error) {
+	    console.error("❌ 결제 실패:", error);
+	  }
+	});
+
+    // ✅ 쿠폰 적용 이벤트
+    document.getElementById("coupon-box").addEventListener("change", function () {
+      const discount = this.checked ? 5000 : 0;
+      finalAmount = Math.max(0, amount - discount);
+
+      widgets.setAmount({ currency: "KRW", value: finalAmount })
+        .then(() => {
+          document.getElementById("final-amount").textContent = finalAmount.toLocaleString() + "원";
+        })
+        .catch(console.error);
+    });
+  </script>
+</body>
+</html>

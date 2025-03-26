@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+window.onload = function() {
+	setTimeout(function() {
+		var result = "[[${result}]]";
+		if (result > 0) {
+			alert("[[${seq}]]번 영화 수정 성공");
+		} else {
+			alert("[[${seq}]]번 영화 수정 실패");
+		}
+		location.href = "/movieinfo/movie_info_view?pg=[[${pg}]]&seq=[[${seq}]]";
+	}, 100)
+}
+</script>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<p>수정페이지</p>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

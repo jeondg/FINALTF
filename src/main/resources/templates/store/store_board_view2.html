@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+	function isDelete() {
+		if (confirm("정말 삭제하시겠습니까?")) {
+			location.href = "/store/store_board_delete?seq=[[${seq}]]&pg=[[${pg}]]";
+		}
+	}
+</script>
+</head>
+<body>
+
+<div class="container">
+	<table class="table" style="width:500px;">
+		<tr align="center">
+			<td rowspan="4">
+				<img alt="" th:src="@{/storage/} + ${board.image1}"
+				 width="250" height="250">
+			</td>
+			<td width="125">상품명</td>
+			<td width="125">[[${board.imagename}]]</td>
+		</tr>
+		<tr align="center">
+			<td>단가</td>
+			<td>[[${board.imageprice}]]</td>
+		</tr>
+		<tr align="center">
+			<td>개수</td>
+			<td>[[${board.imageqty}]]</td>
+		</tr>
+		<tr align="center">
+			<td>합계</td>
+			<td>[[${board.imageprice * board.imageqty}]]</td>
+		</tr>
+		<tr>
+			<td colspan="3" valign="top" height="200">
+				<pre>[[${board.imagecontent}]]</pre>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" align="center">
+				<input type="button" value="목록"
+				 th:onclick="location.href='/store/store_board_list2?pg=[[${pg}]]'">
+				<input type="button" value="수정"
+				 th:onclick="location.href='/store/store_board_modifyForm?pg=[[${pg}]]&seq=[[${seq}]]'">
+				<input type="button" value="삭제" onclick="isDelete()">
+			</td>
+		</tr>
+	</table>
+</div>
+
+</body>
+</html>

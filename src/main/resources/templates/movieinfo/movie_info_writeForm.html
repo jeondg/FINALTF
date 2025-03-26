@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+	function checkInput() {
+		var frm = document.form1;
+		
+		if (!frm.title.value) {
+			alert("영화 제목을 입력하세요.");
+			frm.title.focus();
+			return false;
+		}
+		if (!frm.synopsis.value) {
+			alert("영화 줄거리를 입력하세요.");
+			frm.synopsis.focus();
+			return false;
+		}
+		if (!frm.country.value) {
+			alert("제작 국가를 입력하세요.");
+			frm.country.focus();
+			return false;
+		}
+		if (!frm.director.value) {
+			alert("감독 이름을 입력하세요.");
+			frm.director.focus();
+			return false;
+		}
+		if (!frm.runningtime.value || isNaN(frm.runningtime.value)) {
+			alert("상영시간을 숫자로 입력하세요");
+			frm.runningtime.value = "";
+			frm.runningtime.focus();
+			return false;
+		}
+		if (!frm.releasedate.value) {
+			alert("영화개봉일을 연도-월-일로 입력하세요.");
+			frm.releasedate.focus();
+			return false;
+		}		
+		if (!frm.genre.value) {
+			alert("영화 장르를 입력하세요.");
+			frm.genre.focus();
+			return false;
+		}
+		if (!frm.actors.value) {
+			alert("출연 배우진을 입력하세요.");
+			frm.actors.focus();
+			return false;
+		}
+		if (!frm.trailer.value) {
+			alert("예고편 src를 입력해주세요.");
+			frm.trailer.focus();
+			return false;
+		}
+		if (!frm.movie_img.value) {
+			alert("영화 포스터 파일을 선택하세요.");
+			frm.movie_img.focus();
+			return false;
+		}		
+		frm.submit();
+	}
+</script>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+
+<div class="container">
+	<form action="/movieinfo/movie_info_write" name="form1" method="post"
+	 enctype="multipart/form-data">
+		<table class="table" style="width: 700px; margin:auto;">
+			<tr align="center" class="table-success">
+				<td>영화 등록</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="text" name="title" placeholder="영화명"> 
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<textarea rows="15" cols="90" name="synopsis" placeholder="영화 줄거리"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="text" name="country" placeholder="제작국가">
+					<input type="text" name="director" placeholder="감독"> 
+					<input type="text" name="runningtime" placeholder="상영 시간"> 
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<select name="agerating">
+						<option value="0">전체이용가</option>
+						<option value="12">12세 이상</option>
+						<option value="15">15세 이상</option>
+						<option value="18">18세 이상</option>
+					</select>
+					<input type="text" name="releasedate" placeholder="연도-월-일"> 
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="text" name="genre" placeholder="장르"> 
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<textarea rows="6" cols="90" name="actors" placeholder="출연 배우진"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="text" size="70" name="trailer" placeholder="예고편 src 입력 (유튜브 영상 > 공유 > 퍼가기 > src)">
+				</td>
+			</tr>
+			<tr>
+				<td><input type="file" name="movie_img"></td>
+			</tr>
+			<tr align="right">
+				<td>
+					<input type="button" value="등록하기"
+					 onclick="checkInput()">
+					<input type="button" value="목록"
+					 onclick="location.href='/movieinfo/movie_info_list'">
+				</td>
+			</tr>	
+		</table>
+	</form>
+</div>
+
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

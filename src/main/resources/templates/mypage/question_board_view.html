@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+<script type="text/javascript">
+	function isDelete() {
+		if (confirm("정말 삭제하시겠습니까?")) {
+			location.href = "/mypage/question_board_delete?pg=[[${pg}]]&seq=[[${seq}]]";
+		}
+	}
+</script>
+
+<div class="container">
+	<form action="" name="form1">
+		<table class="table" style="width: 540px;">
+			<tr>
+				<td colspan="2">[[${board.subject}]]</td>
+			</tr>
+			<tr>
+				<td>문의유형 [[${board.question_type}]]</td>
+				<td>답변상태 [[${board.question_stat}]]</td>
+			</tr>
+			<tr>
+				<td colspan="2">[[${board.logtime}]]</td>
+			</tr>
+			<tr height="200">
+				<td colspan="2" valign="top">
+					<pre>[[${board.question_content}]]</pre>
+				</td>
+			</tr>
+			<th:block th:if="${board.answer_content == null}">
+				<tr height="200">
+					<td colspan="2" valign="top">
+						<pre>[[${board.answer_content}]]</pre>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="목록"
+						 th:onclick="location.href='/mypage/question_board_user_list?pg=[[${pg}]]'">
+						<input type="button" value="삭제" onclick="isDelete()">
+					</td>
+				</tr>				
+			</th:block>
+			<th:block th:if="${board.answer_content != null}">
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="목록"
+						 th:onclick="location.href='/mypage/question_board_user_list?pg=[[${pg}]]'">
+					</td>				
+				</tr>
+			</th:block>
+
+		</table>
+	</form>
+</div>
+</body>
+</html>

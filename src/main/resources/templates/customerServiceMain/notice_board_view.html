@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style type="text/css">
+.container{
+	margin-left:70px;
+}
+</style>
+</head>
+<body>
+
+
+<div class="container">
+	<form action="" name="form1">
+		<table border="1" class="table" style="width: 540px;">
+			<tr>
+				<td colspan="2">[[${board.subject}]]</td>
+			</tr>
+			<tr>
+				<td>공지 종류 : [[${board.section}]]</td>
+				<td>글 번호 : [[${board.seq}]]</td>
+			</tr>
+			<tr height="200">
+				<td colspan="2" valign="top">
+					<pre>[[${board.content}]]</pre>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="목록"
+					 th:onclick="location.href='/customerServiceMain/notice_board_list?pg=[[${pg}]]'">
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+</body>
+</html>

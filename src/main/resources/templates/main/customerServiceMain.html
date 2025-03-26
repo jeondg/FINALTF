@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>고객센터메인</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript" th:inline="javascript">
+	function checkLogin(event) {
+		event.preventDefault(); // 기본 링크 이동 방지
+
+		var isLoggedIn = /*[[${session.memId != null}]]*/false; // Thymeleaf로 로그인 여부 체크
+
+		if (!isLoggedIn) {
+			alert("로그인이 필요합니다.");
+			window.location.href = "/member/loginForm"; // 로그인 페이지로 이동
+		} else {
+			window.location.href = "/mypageMain"; // 마이페이지 이동
+		}
+	}
+</script>
+<style>
+/*  header가 맨 위에 오도록 설정 */
+#header-container {
+	width: 100%;
+	background-color: #ffffff;
+	position: relative;
+	z-index: 10;
+}
+
+#main {
+	width: 1100px;
+	min-height: 700px;
+	margin: auto;
+}
+
+table {
+	width: 100%;
+	table-layout: fixed;
+	border: none;
+}
+
+.table tr {
+	border: none; /* 테두리 제거 */
+}
+
+#nav {
+	float: left;
+	margin-top: 50px;
+	width: 220px;
+	background: #FFFFFF;
+	padding: 15px;
+	border-radius: 10px;
+	border: 2px solid #aaa;
+	margin-left: 90px;
+}
+
+.nav-header {
+	font-size: 18px;
+	font-weight: bold;
+	padding: 15px;
+	background: #3B3B3B;
+	text-align: center;
+	border-radius: 8px;
+	margin-bottom: 10px;
+}
+
+.nav-header a {
+	color: white; /* 글씨색 변경 */
+	text-decoration: none; /* 밑줄 제거 */
+	display: block; /* a 태그 전체를 클릭 가능하게 */
+}
+
+.nav-header a:hover {
+	color: #80672C;
+}
+
+.nav-section {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.nav-section li {
+	padding: 12px;
+	border-bottom: 1px solid #555;
+}
+
+.nav-section li:last-child {
+	border-bottom: none;
+}
+
+.nav-section a {
+	text-decoration: none;
+	color: #3B3B3B;
+	font-size: 15px;
+	display: block;
+	transition: 0.3s;
+}
+
+.nav-section a:hover {
+	color: #80672C;
+}
+
+#section {
+	margin-top: 50px;
+	width: 700px;
+	height: 80%;
+	background: white;
+	float: left;
+}
+
+#main:after {
+	clear: both; /* float 속성 해제 */
+}
+
+.subjectA {
+	color: #262626;
+	text-decoration: none;
+}
+
+.subjectA:hover {
+	color: #80672C;
+	text-decoration: none;
+}
+
+footer-container {
+	position: relative;
+	width: 100%;
+}
+
+.subjectA:hover {
+	color: #80672C;
+}
+</style>
+</head>
+<body>
+	<!-- 헤더 -->
+	<div id="header-container">
+		<div th:replace="~{layouts/header}"></div>
+	</div>
+
+	<!-- 메인 콘텐츠 -->
+	<div class="container">
+		<div id="main">
+			<nav id="nav">
+				<div class="nav-header">
+					<a href="/customerServiceMain">고객센터 메인</a>
+				</div>
+				<ul class="nav-section">
+					<li><a href="/customerServiceMain/qna_board_list_all">자주찾는
+							질문</a></li>
+					<li><a href="/customerServiceMain/notice_board_list">공지/뉴스</a></li>
+					<li><a href="/customerServiceMain/question_board_writeForm">1:1문의</a></li>
+					<li><a href="/main">메인화면</a></li>
+					<li><a href="#" onclick="checkLogin(event)">MY PAGE</a></li>
+				</ul>
+			</nav>
+
+			<section id="section">
+				<th:block th:if="${req2 == 'none'}">
+					<div>
+						<table border="1" style="margin-left: 10px;">
+							<tr>
+								<td align="center" class="testsize"
+									style="width: 250px; height: 200px;">
+									<div style="padding: 20px;">
+										<a style="text-decoration: none;"
+											href="/customerServiceMain/qna_board_list_all"> <img
+											class="csimage" src="/menuimage/FAQ.jpg" alt="FAQ"
+											width="100" height="100"><br> <span
+											style="color: black;">자주찾는 질문</span><br> <br> <span
+											style="color: #262626; text-decoration: none;">자주찾는
+												질문들 입니다<br>빠르고 간편하게 확인할수있습니다
+										</span>
+										</a>
+									</div>
+								</td>
+								<td align="center" class="testsize"
+									style="width: 250px; height: 200px;"><a
+									style="text-decoration: none;"
+									href="/customerServiceMain/question_board_writeForm"> <img
+										class="csimage" src="/menuimage/question.jpg" alt="question"
+										width="100" height="100"><br> <span
+										style="color: black;">1:1 문의</span><br> <br> <span
+										style="color: #262626;">해결되지않은 문제가 있나요?<br>1:1문의로
+											문의주세요
+									</span>
+								</a></td>
+							</tr>
+							<tr>
+								<td align="center"><div style="padding-top: 20px;">최근
+										공지사항</div></td>
+								<td align="center"><div style="padding-top: 20px;">최근
+										자주찾는 질문</div></td>
+							</tr>							
+							<tr>
+								<td class="table" align="center">
+
+									<table th:if="${list1 != null and #lists.size(list1) > 0}" style="width: 320px; height: 150px;">
+										<tr th:each="dto1 : ${list1}" align="center">
+											<td style="font-size: 12px; width: 100px; color: #80672C">[[${dto1.section}]]</td>
+											<td style="font-size: 12px; color: #262626;"><a
+												th:href="@{/customerServiceMain/notice_board_view(pg=${pg}, seq=${dto1.seq})}"
+												class="subjectA">[[${dto1.subject}]]</a></td>
+										</tr>
+									</table>
+
+								</td>
+
+								<td class="table" align="center">
+									<table th:if="${list2 != null and #lists.size(list2) > 0}" style="width: 320px; height: 150px;">
+										<tr th:each="dto2 : ${list2}" align="center">
+											<td style="font-size: 12px; width: 80px; color: #80672C;">[[${dto2.section}]]</td>
+											<td style="font-size: 12px;"><a
+												th:href="@{/customerServiceMain/qna_board_view(pg=${pg}, seq=${dto2.seq})}"
+												class="subjectA">[[${dto2.subject}]]</a></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<hr>
+					</div>
+				</th:block>
+				<th:block th:if="${req2 != 'none'}">
+					<div th:replace="~{${req2}}"></div>
+				</th:block>
+			</section>
+		</div>
+	</div>
+
+	<!--  footer는 #header-container 바깥쪽에 배치 -->
+	<div id="footer-container">
+		<div th:replace="~{layouts/footer}"></div>
+	</div>
+</body>
+</html>

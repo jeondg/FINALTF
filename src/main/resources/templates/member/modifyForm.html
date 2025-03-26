@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="/js/memberScript.js?v=2"></script>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style type="text/css">
+body h2 {
+   text-align: center;
+   color: #01b7ed;
+   font-weight: bold;
+   font-size: 24px;
+}
+#mod_column {
+   font-weight: bold;
+}
+</style>
+</head>
+<body>
+   <form action="modify" name="form1" method="post" style="width: 600px; margin: auto;">
+   
+      <h2>회원 정보 수정</h2>
+      <table border="1" class="table">
+         <tr>
+            <td align="center" id="mod_column">아이디</td>
+            <td>
+               <input type="text" name="id" size="25"
+                th:value="${member.id}" readonly>
+            </td>
+         </tr>
+         <tr>
+            <td width="70" align="center" id="mod_column">이름</td>
+            <td width="330"><input type="text" name="name" size="25" th:value="${member.name}"></td>
+         </tr>
+         <tr>
+            <td align="center" id="mod_column">비밀번호</td>
+            <td><input type="password" name="pwd" size="42" th:value="${member.pwd}"></td>
+         </tr>
+         <tr>
+            <td align="center" id="mod_column">비밀번호 확인</td>
+            <td><input type="password" name="repwd" size="42"></td>
+         </tr>
+         <tr>
+            <td align="center" id="mod_column">성별</td>
+            <td>
+            <th:block th:if="${member.gender == 'm'}">
+               <input type="radio" name="gender" value="m" checked>남
+               <input type="radio" name="gender" value="f">여            
+            </th:block>
+            <th:block th:if="${member.gender == 'f'}">
+               <input type="radio" name="gender" value="m">남
+               <input type="radio" name="gender" value="f" checked>여            
+            </th:block>  
+            </td>
+         </tr>
+         <tr>
+            <td align="center" id="mod_column">이메일</td>
+            <td>
+               <input type="text" name="email1" th:value="${member.email1}">@
+               <input type="text" name="email2" th:value="${member.email2}">
+            </td>
+         </tr>
+         <tr>
+            <td align="center" id="mod_column">핸드폰</td>
+            <td>
+               <input type="text" name="tel1" size="12" th:value="${member.tel1}">
+               <input type="text" name="tel2" size="12" th:value="${member.tel2}">-
+               <input type="text" name="tel3" size="12" th:value="${member.tel3}">
+            </td>
+         </tr>
+         <tr>
+            <td align="center" id="mod_column">주소</td>
+            <td><input type="text" name="addr"  size="42" th:value="${member.addr}"></td>
+         </tr>
+         <tr>
+            <td colspan="2" align="center">
+               <input type="button" value="회원정보수정" onclick="checkWrite()">
+               <input type="reset" value="초기화">
+            </td>
+         </tr>
+      </table>     
+   </form>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" th:inline="javascript">
+window.onload = function() {
+	var result = "[[${result}]]";
+	setTimeout(function() {
+		if (result > 0) {
+			alert("[[${seq}]]번 삭제 성공");
+			location.href = "/theater/theater_list?pg=[[${pg}]]"
+		} else {
+			alert("[[${seq}]]번 삭제 실패");
+			history.back();
+		}
+	}, 100)
+}
+</script>
+</head>
+<body>
+
+
+</body>
+</html>

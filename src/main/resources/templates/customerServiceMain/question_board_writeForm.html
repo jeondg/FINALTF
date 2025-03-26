@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style type="text/css">
+.qbwriteform{
+	margin-left:50px;
+}
+.login-alert {
+    background-color: #DEDEDE; 
+    color: #3B3B3B;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #555;
+    text-align: center;
+    font-size: 16px;
+    width: 300px;
+    margin: 20px 150px;
+}
+
+.login-btn, .signup-btn {
+    display: inline-block;
+    background-color: #3B3B3B; 
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover, .signup-btn:hover {
+    background-color: #555;
+}
+
+</style>
+<script type="text/javascript">
+
+function checkBoardWrite() {
+	var frm = document.form1;
+	
+	if (!frm.question_type.value) {
+		alert("문의유형을 선택해주세요");
+		frm.question_type.focus();
+		return false;
+	}
+	if (!frm.subject.value) {
+		alert("제목을 입력해주세요");
+		frm.subject.focus();
+		return false;
+	}
+	
+	if (!frm.question_content.value) {
+		alert("내용을 입력해주세요");
+		frm.qeustion_content.focus();
+		return false;
+	}
+	
+	if (!frm.img.value) {
+		alert("파일을 첨부해주세요")
+		frm.img.focus();
+		return false;
+	}
+	
+	frm.submit();
+}
+</script>
+</head>
+<body>
+	<div class="qbwriteform">
+		<th:block th:if="${session.memId == null}">
+		    <div class="login-alert">
+		        <p><strong>로그인이 필요합니다.</strong></p>
+		        <a href="/member/loginForm" class="login-btn">로그인 하러가기</a>
+		        <a href="/member/writeForm" class="signup-btn">회원가입 하러가기</a>
+		    </div>
+		</th:block>
+	
+	
+		<th:block th:if="${session.memId != null}">
+			<h2>&nbsp;1:1문의</h2><br><br>
+			<ul>
+			  <li><strong>고객님의 문의에 답변하는 직원은</strong> <span style="color:red;">고객 여러분의 가족 중 한 사람일 수 있습니다.</span>
+			  <br>고객의 언어폭력으로부터 직원을 보호하기위해
+			  <br>관련 법에 따라 수사기관에 필요한 조치를 요구할 수 있으며, <br>형법에 의해 처벌 대상이 될 수 있습니다.</li>
+			  <li>문의하시기 전 자주찾는 질문을 확인하시면 궁금증을 더욱 빠르게 <br>해결하실 수 있습니다.</li>
+			</ul>
+			<br><br>
+			
+			<form action="/customerServiceMain/question_board_write" name="form1" method="post" enctype="multipart/form-data">
+				<table class="table" style="width:600px;">
+					<tr align="center">
+						<td width="120">문의 유형</td>
+						<td width="480">
+							<select name="question_type">
+								<option value="[영화정보문의]">영화정보문의</option>
+								<option value="[포인트문의]">포인트문의</option>
+								<option value="[예매/결제관련문의]">예매/결제관련문의</option>
+								<option value="[일반문의]">일반문의</option>
+								<option value="[제안/건의]">제안/건의</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>이름</td>
+						<td>
+							<input type="hidden" name="question_id" th:value="${session.memId}">
+	    					[[${session.memName}]]
+						</td>
+					</tr>
+					<tr>
+						<td>제목</td>
+						<td><input type="text" name="subject" size="44"></td>
+					</tr>
+					<tr>
+						<td>내용</td>
+						<td><textarea cols="45" rows="15" name="question_content"></textarea></td>
+					</tr>
+					<tr>
+						<td>사진첨부</td>
+						<td>* 개인정보가 포함된 이미지 등록은 자제하여 주시기 바랍니다.<input type="file" value="파일 선택" name="img"></td>
+					</tr>
+								<tr align="right">
+					<th colspan="2">
+						<input type="button" value="글쓰기" onclick="checkBoardWrite()">
+						<input type="reset" value="다시 작성">
+					</th>
+					
+				</tr>
+				</table>
+			</form>		
+		</th:block>
+
+	</div>
+
+</body>
+</html>

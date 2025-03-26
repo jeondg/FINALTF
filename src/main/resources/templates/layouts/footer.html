@@ -1,0 +1,111 @@
+<!-- Footer 영역 -->
+<footer style="background-color: #f8f8f8; padding: 30px 0; color: #555; font-size: 13px; font-family: Arial, sans-serif; position: relative; width: 100%; margin-top: auto;">
+	<style>
+		html, body {
+		    height: 100%;
+		    margin: 0;
+		    display: flex;
+		    flex-direction: column;
+		    min-height: 100vh;  /* 최소 높이를 화면 전체로 설정 */
+		}
+
+        #main {
+            flex-grow: 1; /* 콘텐츠가 부족하면 footer가 아래로 이동 */
+        }
+		footer {
+		    position: relative;
+		    width: 100%;
+		    background-color: #f8f8f8;
+		    padding: 30px 0;
+		}
+        .footer-letter {
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            width: 18px;
+            height: 22px;
+            display: flex;
+            color: #ffffff;
+            justify-content: center;
+            align-items: center;
+            margin: 1px;
+        }
+        .footer-letter:nth-child(odd) {
+            background-color: #FFD700;
+        }
+        .footer-letter:nth-child(even) {
+            background-color: #FFA500;
+        }
+        .footer-enjoy-text {
+            font-size: 12px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: center;
+            line-height: 1;
+            margin-top: 3px;
+        }
+        .footer-enjoy-text span:nth-child(odd) {
+            color: #FFD700;
+        }
+        .footer-enjoy-text span:nth-child(even) {
+            color: #FFA500;
+        }
+        .footer-logo-text {
+            display: flex;
+        }
+        .footer-item {
+            list-style: none;
+        }
+        .footer-logo-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .footer-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+	</style>
+  <div style="width: 60%; max-width: 1200px; margin: auto; display: flex; flex-direction: column; align-items: flex-start;">
+    <!-- 상단 메뉴 링크 -->
+
+    <!-- 로고 및 정보 -->
+    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+		<ul style="padding: 0; margin: 0; display: flex; align-items: center;">
+            <li class="footer-item footer-logo-wrapper">
+                <div class="logo-clickable" onclick="location.href='/main'">
+	                <div class="footer-logo-container">
+	                    <div class="footer-logo-text">
+	                        <div class="footer-letter">P</div>
+	                        <div class="footer-letter">O</div>
+	                        <div class="footer-letter">P</div>
+	                        <div class="footer-letter">B</div>
+	                        <div class="footer-letter">O</div>
+                            <div class="footer-letter">X</div>
+	                    </div>
+	                </div>
+	                <div class="footer-enjoy-text">
+                        <span>E</span><span>N</span><span>J</span><span>O</span><span>Y</span>
+                        <span> </span>
+                        <span>T</span><span>H</span><span>E</span>
+	                    <span> </span>
+	                    <span>M</span><span>O</span><span>V</span><span>I</span><span>E</span>
+	                </div>
+                </div>
+            </li>
+		</ul>
+      <div style="font-size: 12px; line-height: 1.6; margin-left: 20px;">
+        서울특별시 동작구 장승배기로 171길 22 노량진아이비빌딩 3층<br>
+        대표변호 1666-9210 | 대표이메일 m.dreamcenter@partner.popbox.co.kr<br>
+        대표자명 홍길동 | 개인정보보호책임자 김철수<br>
+        사업자등록번호 542-85-00739  | 통신판매업신고번호 제 2019-서울중구-2086호
+      </div>
+    </div>
+
+    <div style="font-size: 12px; color: #aaa;">
+      COPYRIGHT © PopboxJoongAng, Inc. All rights reserved
+    </div>
+  </div>
+</footer>

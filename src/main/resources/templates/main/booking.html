@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>영화 예매 시스템</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #242333;
+	color: #fff;
+	margin: 0;
+	padding: 20px;
+}
+
+.container {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.section {
+	background-color: #2f2d3b;
+	border-radius: 8px;
+	flex: 1;
+	margin: 5px;
+	overflow: auto;
+	height: 420px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.section h3 {
+	color: #fff;
+	padding: 8px;
+	background: #3e3c4e;
+	margin: 0;
+	text-align: center;
+}
+
+.item {
+	color: #ddd;
+	padding: 8px;
+	cursor: pointer;
+	border-bottom: 1px solid #444;
+	transition: all 0.3s;
+}
+
+.item:hover {
+	background-color: #57556c;
+}
+
+.item.selected {
+	background-color: #6bc1f2;
+	color: #fff;
+}
+
+#seatBtn {
+	display: none;
+	width: 100%;
+	padding: 10px;
+	margin-top: 10px;
+	background-color: #6bc1f2;
+	border: none;
+	color: white;
+	cursor: pointer;
+	border-radius: 4px;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div class="section" id="movies">
+			<h3>영화 선택</h3>
+			<div class="list">
+				<div class="item" th:each="movie:${movies}" th:data-id="${movie.id}" th:text="${movie.title}"></div>
+			</div>
+	</div>
+
+	<div class="section" id="theaters">
+		<h3>극장 선택</h3>
+		<div class="list">
+			<div class="item" th:each="theater : ${theaters}" th:data-id="${theater.id}" th:text="${theater.location + ' - ' + theater.name}"></div>
+		</div>
+	</div>
+
+	<div class="section" id="dates">
+		<h3>날짜 선택</h3>
+		<div class="list">
+			<div class="item" th:each="day : ${#numbers.sequence(14,30)}"
+				 th:data-date="${'2025-03-' + (day < 10 ? '0'+day : day)}"
+				 th:text="${'2025-03-' + (day < 10 ? '0'+day : day)}"></div>
+		</div>
+	</div>
+
+	<div class="section" id="times">
+		<h3>시간 선택</h3>
+		<div class="list" id="timeList">영화, 극장, 날짜를 선택해주세요.</div>
+		<button id="seatBtn">좌석 선택하기</button>
+	</div>
+</div>
+
+<a href="/main" style="color: white;">메인 화면</a>
+
+<script>
+	const selected = { movieId: null, theaterId: null, date: null, screeningId: null };
+	
+	function addEvent(section, type) {
+		document.querySelectorAll(`#${section} .item`).forEach(el => {
+			el.onclick = () => {
+				document.querySelectorAll(`#${section} .item`).forEach(i => i.classList.remove('selected'));
+			el.classList.add('selected');
+			selected[type] = el.getAttribute(type === 'date' ? 'data-date' : 'data-id');
+			selected.screeningId = null;
+			document.getElementById('seatBtn').style.display = 'none';
+			loadTimes();
+			};
+		});
+	}
+	
+	addEvent('movies', 'movieId');
+	addEvent('theaters', 'theaterId');
+	addEvent('dates', 'date');
+	
+	function loadTimes() {
+		const { movieId, theaterId, date } = selected;
+		if (movieId && theaterId && date) {
+			fetch(`/booking/screenings?movieId=${movieId}&theaterId=${theaterId}&date=${date}`)
+				.then(res => res.json())
+				.then(data => {
+					const timeList = document.querySelector("#timeList");
+					timeList.innerHTML = '';
+					data.forEach(s => {
+						const div = document.createElement('div');
+					div.className = 'item';
+					div.textContent = s.screenTime;
+					div.onclick = () => {
+						document.querySelectorAll('#timeList .item').forEach(i => i.classList.remove('selected'));
+						div.classList.add('selected');
+						selected.screeningId = s.id;
+						document.getElementById('seatBtn').style.display = 'block';
+					};
+					timeList.appendChild(div);
+				});
+			});
+		}
+	}
+	
+	async function checkLoginStatus() {
+	    try {
+	        const response = await fetch('/api/check-login-status');
+	        if (!response.ok) throw new Error("로그인 상태 체크 실패");
+	        const data = await response.json();
+	        return data.loggedIn;
+	    } catch (error) {
+	        console.error("로그인 상태 체크 에러:", error);
+	        return false;
+	    }
+	}
+	
+	document.getElementById('seatBtn').onclick = async () => {
+	    const loggedIn = await checkLoginStatus();
+	    if (!loggedIn) {
+	        alert("로그인 상태가 아닙니다. 로그인 페이지로 이동합니다.");
+	        location.href = "/member/loginForm";
+	        return;
+	    }
+
+	    if (!selected.screeningId) {
+	        alert("상영 시간을 선택해주세요.");
+	        return;
+	    }
+
+	    location.href = `/select-seat?screeningId=${selected.screeningId}`;
+	};
+</script>
+
+</body>
+</html>

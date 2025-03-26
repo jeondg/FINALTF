@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style type="text/css">
+#main {
+	width: 960px;
+	margin: auto;
+}
+
+#nav {
+	width: 150px;
+	/*height: 100%;*/
+	background: #b2ffdd;
+	float: left;
+}
+#section {
+	width: 810px;
+	height: 100%;
+	float: left;
+	background: white;
+}
+/*
+#main:after {
+	clear: both;
+}
+*/
+</style>
+</head>
+<body>
+
+<div th:replace="~{layouts/header}"></div>
+
+<div id="main">
+	<nav id="nav">
+		<h3><a href="/admin/admin_index">관리자 메인화면</a></h3>
+		<p><a href="/admin/admin_board_list" class="index_menu">공지관리</a></p>
+		<p><a href="/qna/qna_main" class="index_menu">자주 찾는 질문</a></p>
+		<p><a href="#" class="index_menu">문의내역 관리</a></p>
+		<p><a href="/theater/theater_list" class="index_menu">극장 관리</a></p>
+		<p><a href="/movieinfo/movie_info_list" class="index_menu">영화 관리</a></p>
+		<p><a href="/store/store_board_list" class="index_menu">스토어 관리</a></p>
+		<p><a href="/main" class="index_menu">메인화면</a></p>
+	</nav>
+	
+	<section>
+
+	<th:block th:if="${req == 'none'}">
+		<img src="/image/lion.jpg">
+	</th:block>
+	<th:block th:if="${req != 'none'}">
+		<div th:replace="~{${req}}"></div>
+	</th:block>
+	
+	</section>
+	<p>ㅎㅇ</p>
+<div th:replace="~{layouts/footer}"></div>
+</div>	
+</body>
+</html>

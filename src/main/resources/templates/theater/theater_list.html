@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style type="text/css">
+.paging {
+	color: blue;
+	text-decoration: none;
+}
+.currentPaging {
+	color: red;
+}
+</style>
+</head>
+<body>
+
+<div class="container" style="width: 500px; margin:auto;">
+
+<table border="1" class="table" style="width: 500px; margin:auto;">
+	<tr align="center" class="table-primary">
+		<td>극장번호</td>
+		<td>극장 사진</td>
+		<td>극장명</td>
+		<td>극장연락처</td>
+	</tr>
+	<tr th:each="dto : ${list}" align="center">
+		<td>[[${dto.seq}]]</td>
+		<td><a th:href="@{/theater/theater_view(pg=${pg}, seq=${dto.seq})}"><img alt="img"
+		 th:src="@{/storage/} + ${dto.theater_image1}" width="50" height="50"></a></td>
+		<td>[[${dto.theater_name}]]</td>
+		<td>[[${dto.theater_phone}]]</td>
+	</tr>
+	<tr align="center">
+		<td colspan="5">
+			<span th:if="${startPage > 3}">
+				<a th:href="@{/theater/theater_list(pg=${startPage-1})}"
+				 class="paging">[이전]</a>
+			</span>
+			<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+				<span th:if="${pg == i}">
+					[<a th:href="@{/theater/theater_list(pg=${i})}"
+					 class="currentPaging">[[${i}]]</a>]
+				</span>
+				<span th:if="${pg != i}">
+					[<a th:href="@{/theater/theater_list(pg=${i})}"
+					 class="paging">[[${i}]]</a>]
+				</span>				
+			</span>
+			<span th:if="${endPage < totalP}">
+				<a th:href="@{/theater/theater_list(pg=${endPage+1})}"
+				 class="paging">[다음]</a>
+			</span>
+		</td>
+	</tr>
+</table>
+<a href="/theater/theater_writeForm">극장 등록</a>
+<a href="/admin/admin_index">관리자 메인화면</a>
+<a href="/main">메인 화면으로</a>
+</div>
+
+</body>
+</html>

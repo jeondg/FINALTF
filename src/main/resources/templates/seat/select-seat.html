@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>좌석 선택</title>
+<style>
+body {
+  font-family: Arial;
+  background-color: #242333;
+  color: #fff;
+  text-align: center;
+}
+.seat-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.seat-row {
+  display: flex;
+}
+.seat {
+  border: 1px solid #aaa;
+  margin: 3px;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 0.9rem;
+  background-color: #eee;
+  color: #000;
+}
+.seat.selected {
+  background-color: #6bc1f2;
+  color: #fff;
+}
+.seat.sold {
+  background-color: #555 !important;
+  cursor: not-allowed;
+}
+.seat.couple {
+  background-color: #e67e22 !important;
+  border: 2px solid #f39c12;
+  color: #fff;
+}
+#payBtn {
+  margin-top: 20px;
+  padding: 10px 30px;
+  display: inline-block;
+  cursor: pointer;
+  background-color: #6bc1f2;
+  border: none;
+  color: white;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<h2>좌석 선택</h2>
+<label>
+  인원 선택:
+  <select id="seatCount">
+    <option value="0">인원 수 선택</option>
+    <option value="1">1명</option>
+    <option value="2">2명</option>
+    <option value="3">3명</option>
+    <option value="4">4명</option>
+  </select>
+</label>
+
+<div class="seat-map" id="seatMap"></div>
+<p><strong>결제 금액: <span id="total-price">0</span>원</strong></p>
+<div>
+  <button id="payBtn">결제하기</button>
+</div>
+
+<script th:inline="javascript">
+const seatMap = document.getElementById('seatMap');
+const payBtn = document.getElementById('payBtn');
+const priceDisplay = document.getElementById('total-price');
+const screeningId = /*[[${screening.id}]]*/ 0;
+const userId = /*[[${userId}]]*/ 'test';
+
+let selectedSeats = [];
+let pricePerSeat = 0;
+const rows = ['A','B','C','D','E'];
+const cols = 8;
+const coupleSeats = ['E1','E2','E3','E4','E5','E6','E7','E8'];
+
+async function fetchSeatPrice() {
+  const res = await fetch(`/api/screening/price?screeningId=${screeningId}`);
+  const data = await res.json();
+  pricePerSeat = data.price;
+}
+
+async function fetchSoldSeats() {
+  const res = await fetch(`/booking/booked-seats?screeningId=${screeningId}`);
+  const bookings = await res.json();
+  const sold = [];
+  bookings.forEach(b => {
+    b.seatNumber.split(',').forEach(seat => sold.push(seat));
+  });
+  return sold;
+}
+
+async function renderSeats() {
+  const soldSeats = await fetchSoldSeats();
+  rows.forEach(row => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'seat-row';
+    for (let x = 1; x <= cols; x++) {
+      const seatName = `${row}${x}`;
+      const seat = document.createElement('div');
+      seat.className = 'seat';
+      seat.textContent = seatName;
+
+      if (coupleSeats.includes(seatName)) {
+        seat.classList.add('couple');
+      }
+
+      if (soldSeats.includes(seatName)) {
+        seat.classList.add('sold');
+        seat.style.pointerEvents = 'none';
+      } else {
+        seat.onclick = () => toggleSeat(seat);
+      }
+
+      rowDiv.appendChild(seat);
+    }
+    seatMap.appendChild(rowDiv);
+  });
+}
+
+function toggleSeat(seat) {
+  const maxSeats = parseInt(document.getElementById('seatCount').value);
+  const seatName = seat.textContent;
+  if (maxSeats === 0) {
+    alert("먼저 인원을 선택하세요.");
+    return;
+  }
+  const isSelected = seat.classList.contains('selected');
+  if (!isSelected) {
+    if (selectedSeats.length >= maxSeats) {
+      alert("선택 인원을 초과했습니다.");
+      return;
+    }
+    seat.classList.add('selected');
+    selectedSeats.push(seatName);
+  } else {
+    seat.classList.remove('selected');
+    selectedSeats = selectedSeats.filter(s => s !== seatName);
+  }
+  updatePrice();
+  payBtn.style.display = (selectedSeats.length === maxSeats) ? 'inline-block' : 'none';
+}
+
+function updatePrice() {
+  priceDisplay.textContent = (selectedSeats.length * pricePerSeat).toLocaleString();
+}
+
+payBtn.onclick = async () => {
+  if (selectedSeats.length === 0) {
+    alert("좌석을 선택해주세요.");
+    return;
+  }
+  const seatParam = selectedSeats.join(',');
+  const response = await fetch('/booking/reserve', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      screeningId,
+      seatNumber: seatParam,
+      userId
+    })
+  });
+
+  if (response.ok) {
+    const bookingId = await response.text();
+    location.href = `/payments?bookingId=${bookingId}`;
+  } else {
+    alert("예매 실패 - 좌석 중복 또는 서버 오류");
+    location.href = "/fail.html?message=좌석중복";
+  }
+};
+
+fetchSeatPrice().then(renderSeats);
+</script>
+</body>
+</html>

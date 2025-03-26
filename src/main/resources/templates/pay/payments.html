@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>영화 예매 결제</title>
+  <script src="https://js.tosspayments.com/v2/standard"></script>
+  <style>
+    body {
+      background-color: #f5f8ff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding-top: 50px;
+    }
+    .wrapper {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 500px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    #payment-button {
+      background-color: #3182f6;
+      border: none;
+      color: white;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .checkable {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <h2>영화 예매 결제</h2>
+    <p><strong>결제 금액:</strong> <span id="final-amount">불러오는 중...</span></p>
+    <div id="payment-method"></div>
+    <div id="agreement"></div>
+    <div class="checkable">
+      <label for="coupon-box">
+        <input id="coupon-box" type="checkbox" /> <span>5,000원 쿠폰 적용</span>
+      </label>
+    </div>
+    <button id="payment-button">결제하기</button>
+  </div>
+
+  <script>
+    async function init() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookingId = urlParams.get("bookingId");
+      if (!bookingId) {
+        alert("❌ 예약 정보가 없습니다. (bookingId 없음)");
+        return;
+      }
+
+      let amountValue = 0;
+      let orderId = null;
+
+      try {
+        const orderResponse = await fetch(`/api/booking/orderId?bookingId=${bookingId}`);
+        if (!orderResponse.ok) throw new Error("orderId를 불러올 수 없습니다.");
+        const orderData = await orderResponse.json();
+        orderId = orderData.orderId;
+        if (!orderId) throw new Error("orderId가 없습니다.");
+      } catch (error) {
+        console.error("❌ orderId 로딩 실패:", error);
+        alert("예약 정보가 올바르지 않습니다.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/booking/price?bookingId=${bookingId}`);
+        if (!response.ok) throw new Error("결제 금액을 불러올 수 없습니다.");
+        const data = await response.json();
+        amountValue = Number(data.price);
+        document.getElementById("final-amount").textContent = amountValue.toLocaleString() + "원";
+      } catch (error) {
+        console.error("❌ 결제 가격 로딩 실패:", error);
+        alert(error.message);
+        return;
+      }
+
+      const tossPayments = TossPayments("test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm");
+      const widgets = tossPayments.widgets({ customerKey: orderId });
+
+      try {
+        await widgets.setAmount({ currency: "KRW", value: amountValue });
+        await widgets.renderPaymentMethods({ selector: "#payment-method", variantKey: "DEFAULT" });
+        await widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" });
+      } catch (error) {
+        console.error("❌ Toss 위젯 초기화 실패:", error);
+        return;
+      }
+
+      document.getElementById("payment-button").addEventListener("click", async function () {
+        try {
+          await widgets.requestPayment({
+            orderId: orderId,
+            orderName: "영화 예매",
+            successUrl: `${window.location.origin}/success.html?orderId=${orderId}&paymentKey={paymentKey}&amount=${amountValue}`,
+            failUrl: `${window.location.origin}/fail.html`,
+            customerEmail: "customer@example.com",
+            customerName: "홍길동",
+            customerMobilePhone: "01012345678"
+          });
+        } catch (error) {
+          console.error("❌ 결제 요청 실패:", error);
+        }
+      });
+
+      document.getElementById("coupon-box").addEventListener("change", async function () {
+        const discount = this.checked ? 5000 : 0;
+        const newAmount = Math.max(0, amountValue - discount);
+        try {
+          await widgets.setAmount({ currency: "KRW", value: newAmount });
+          document.getElementById("final-amount").textContent = newAmount.toLocaleString() + "원";
+        } catch (error) {
+          console.error("❌ 쿠폰 적용 실패:", error);
+        }
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

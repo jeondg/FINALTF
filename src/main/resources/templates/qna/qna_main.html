@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style type="text/css">
+#main {
+	width: 960px;
+	height: 650px;
+	margin: auto;
+}
+header {
+	text-align: center;
+	border-bottom: 2px solid black;
+	width: 100%;
+	height: 70px;
+	padding-top: 5px;	
+}
+#nav {
+	width: 150px;
+	height: 100%;
+	background: #b2ffdd;
+	float: left;
+}
+#section {
+	width: 810px;
+	height: 100%;
+	float: left;
+	background: white;
+}
+#main:after {
+	clear: both;
+}
+</style>
+</head>
+<body>
+
+<header>
+<p>ㅎㅇ</p>
+</header>
+
+<div id="main">
+	<nav id="nav">
+		<h3><a href="/qna/qna_main">자주 찾는 질문</a></h3>
+		<p>회원님들께서 가장 자주하시는 질문을 모았습니다.</p>
+		<p>궁금하신 내용에 대해 찾아보세요</p>
+		<a href="/admin/admin_index">관리자 메인 화면</a>
+	</nav>
+	<section>
+	<a href="/qna/qna_board_list_all"><input type="button" value="전체"></a><a href="/qna/qna_board_list_reserve"><input type="button" value="예매/관람권"></a><a href="/qna/qna_board_list_theater"><input type="button" value="영화관이용"></a><a href="/qna/qna_board_list_homepage"><input type="button" value="홈페이지"></a>
+	<br>
+	<th:block th:if="${req == 'none'}">
+		<img src="/image/lion.jpg">
+	</th:block>
+	<th:block th:if="${req != 'none'}">
+		<div th:replace="~{${req}}"></div>
+	</th:block>
+	</section>
+
+<footer>
+<p>ㅎㅇ</p>
+</footer>
+
+</div>	
+</body>
+</html>

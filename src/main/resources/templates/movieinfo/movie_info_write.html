@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript" th:inline="javascript">
+window.onload = function() {
+	setTimeout(function () {
+		var result = /*[[${result}]]*/ "";
+		var info_result = /*[[${info_result}]]*/ null;
+		if (info_result != null) {
+			alert(result);
+		} else {
+			alert(result);
+		}
+		location.href = "/movieinfo/movie_info_list";
+	}, 100)
+}
+</script>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<p>ㅎㅇ</p>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

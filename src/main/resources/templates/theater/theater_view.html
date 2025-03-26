@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+	function isDelete() {
+		if (confirm("정말 삭제하시겠습니까?")) {
+			location.href = "/theater/theater_delete?seq=[[${seq}]]&pg=[[${pg}]]";
+		}
+	}
+</script>
+</head>
+<body>
+
+
+<div class="container">
+	<table class="table" style="width:500px; margin:auto;">
+		<tr align="center">
+			<td rowspan="2">
+				<img alt="" th:src="@{/storage/} + ${theater.theater_image1}"
+				 width="250" height="250">
+			</td>
+			<td width="125">극장이름</td>
+			<td width="125">[[${theater.theater_name}]]</td>
+		</tr>
+		<tr align="center">
+			<td>극장연락처</td>
+			<td>[[${theater.theater_phone}]]</td>
+		</tr>
+		<th:block th:if="${req == 'none'}">
+		<tr>
+			<td colspan="3" valign="top" height="200">
+				<pre>상영관 목록이 들어갈 곳</pre>
+			</td>
+		</tr>
+		</th:block>
+		<th:block th:if="${req != 'none'}">
+		<tr>
+			<td colspan="3">
+				<div th:replace="~{${req}}"></div>
+			</td>
+		</tr>
+		</th:block>
+		<tr>
+			<td colspan="3" align="center">
+				<input type="button" value="목록"
+				 th:onclick="location.href='/theater/theater_list?pg=[[${pg}]]'">
+				<input type="button" value="수정"
+				 th:onclick="location.href='/theater/theater_modifyForm?pg=[[${pg}]]&seq=[[${seq}]]'">
+				<input type="button" value="삭제" onclick="isDelete()">
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+</body>
+</html>

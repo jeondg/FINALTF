@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<style type="text/css">
+
+</style>
+<script type="text/javascript" th:inline="javascript">
+function checkInput() {
+	var frm = document.form1;
+	
+	if (!frm.screen_num.value || isNaN(frm.screen_num.value)) {
+		alert("상영관 번호를 숫자로 입력하세요");
+		frm.screen_num.value = "";
+		frm.screen_num.focus();
+		return false;
+	}	
+	if (!frm.screen_name.value) {
+		alert("상영관 이름을 입력하세요");
+		frm.screen_name.focus();
+		return false;
+	}
+	if (!frm.screen_cost.value || isNaN(frm.screen_cost.value)) {
+		alert("비용을 숫자로 입력하세요");
+		frm.screen_cost.value = "";
+		frm.screen_cost.focus();
+		return false;
+	}
+	if (!frm.screen_img.value) {
+		alert("극장 사진 파일을 넣어주세요");
+		frm.screen_img.focus();
+		return false;
+	}
+	if (!frm.x_index.value || isNaN(frm.x_index.value)) {
+		alert("열 당 좌석 수를 숫자로 입력하세요");
+		frm.x_index.value = "";
+		frm.x_index.focus();
+		return false;
+	}
+	if (!frm.y_index.value || isNaN(frm.y_index.value)) {
+		alert("열 수를 숫자로 입력하세요");
+		frm.y_index.value = "";
+		frm.y_index.focus();
+		return false;
+	}
+	if (!frm.seats_info.value) {
+		alert("좌석을 한번 눌러주세요");
+		return false;
+	}
+	if (frm.aisle && !frm.aisle.value) {
+		alert("통로의 위치를 지정해주세요");
+		frm.aisle.focus();
+		return false;
+	}
+	
+	frm.submit();
+}
+
+function seatInput() {
+	var frm = document.form1;
+	var pg = frm.pg.value;
+	var seq = frm.seq.value;
+	var screen_num = frm.screen_num.value;
+	var screen_name = frm.screen_name.value;
+	var screen_cost = frm.screen_cost.value;
+	var x_index = frm.x_index.value;
+	var y_index = frm.y_index.value;
+	
+	// 여러 선택된 값을 배열로 가져오기
+	if (frm.aisle) {
+		var aisle_select = frm.aisle;
+		var aisle = [];
+		for (var i = 0; i < aisle_select.selectedOptions.length; i++) {
+			aisle.push(aisle_select.selectedOptions[i].value);
+		}
+	}
+	if (!frm.x_index.value || isNaN(frm.x_index.value)) {
+		alert("열 당 좌석 수를 숫자로 입력하세요");
+		frm.x_index.value = "";
+		frm.x_index.focus();
+		return false;
+	}
+	if (!frm.y_index.value || isNaN(frm.y_index.value)) {
+		alert("열 수를 숫자로 입력하세요");
+		frm.y_index.value = "";
+		frm.y_index.focus();
+		return false;
+	}
+	
+
+	location.href = "/theater/screen/screen_writeForm?pg=" 
+		+ pg + "&seq="
+		+ seq + "&screen_num="
+		+ screen_num + "&screen_name=" + screen_name 
+		+ "&screen_cost=" + screen_cost +"&x_index="
+		+ x_index + "&y_index=" + y_index	
+			
+	if (frm.aisle) {
+		if (frm.aisle && !frm.aisle.value) {
+			alert("통로의 위치를 지정해주세요");
+			frm.aisle.focus();
+			return false;
+		}
+		location.href = "/theater/screen/screen_writeForm?pg=" 
+			+ pg + "&seq=" 
+			+ seq + "&screen_num=" 
+			+ screen_num + "&screen_name="
+			+ screen_name + "&screen_cost=" + screen_cost +"&x_index="
+			+ x_index + "&y_index=" + y_index
+			+ "&aisle=" + encodeURIComponent(aisle.join(','));		
+	}
+		
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+});
+
+let selected_seats = [];	// 선택된 좌석 정보 저장
+
+// 좌석 버튼 클릭 시 상태 변경
+function seat_stat(row, col) {
+	const seat_type = document.querySelector('input[name="seat_code"]:checked');
+	
+	if (!seat_type) {
+		alert("좌석 종류를 선택해주세요.");
+		return;
+	}
+	
+	const seatCode = seat_type.value;
+	const button = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+	
+	// 버튼의 클래스와 상태를 변경
+	if (seatCode == 1) {
+		button.classList.remove("btn", "btn-danger", "btn-sm");
+		button.classList.add("btn-outline-primary");
+		
+	} else if (seatCode == 2) {
+		button.classList.remove("btn-outline-primary");
+		button.classList.add("btn", "btn-danger", "btn-sm");
+	}
+	
+	// data-info 업데이트
+	button.dataset.info = seatCode;
+	
+	// 좌석 정보 저장
+	selected_seats.push({ row, col, seatCode });
+	
+	// 좌석 정보 수집 (data-row, data-col, data-info, data-purchase)
+	const allSeats = [];
+	const buttons = document.querySelectorAll('input[type="button"][data-info]');
+	buttons.forEach(button => {
+		const row = button.dataset.row;
+		const col = button.dataset.col;
+		const seatCode = button.dataset.info;
+		const purchase = button.dataset.purchase;
+		allSeats.push({ row, col, seatCode, purchase });
+	});
+	
+	// 수집된 좌석 정보를 숨겨진 필드에 저장
+	document.getElementById('seats_info').value = JSON.stringify(allSeats); // 배열을 JSON 문자열로 변환
+	
+}
+</script>
+</head>
+<body>
+
+<div class="container">
+	<form action="/theater/screen/screen_write" name="form1" method="post"
+	 enctype="multipart/form-data">
+	 	<input type="hidden" name="seats_info" id="seats_info">
+	 	<input type="hidden" name="pg" th:value="${pg}">
+	 	<input type="hidden" name="seq" th:value="${seq}">
+	 	<h3 align="center">상영관 등록</h3>
+		<table border="1" style="width: 500px; margin: auto;" class="table">
+			<tr>
+				<td>상영관번호</td>
+				<td><input type="text" name="screen_num"
+				 size="42" th:value="${screen_num}"></td>
+			</tr>
+			<tr>
+				<td>상영관명</td>
+				<td><input type="text" name="screen_name"
+				 size="42" th:value="${screen_name}"></td>
+			</tr>
+			<tr>
+				<td>기본 비용</td>
+				<td><input type="text" name="screen_cost"
+				 size="42" th:value="${screen_cost}"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<!-- DTO의 image1과 똑같은 이름을 사용하면 안된다. -->
+					<input type="file" name="screen_img" size="42">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<label>가로 : </label>
+					<input type="text" name="x_index"
+					 size="6" th:value="${x_index}">
+					<label>세로 : </label>
+					<input type="text" name="y_index"
+					 size="6" th:value="${y_index}">
+					<input type="button" value="만들기" onclick="seatInput()">
+					<input type="reset" value="다시작성">
+				</td>
+			</tr>
+			<th:block th:if="${x_index != 0}">
+			<tr>
+				<td colspan="2">
+					
+					<select name="aisle" multiple>
+						<option th:each="x : ${#numbers.sequence(1, (x_index-1))}"
+						 th:value="${x}" th:text="|${x}~${x+1} 사이|"></option>
+					</select>
+				
+				</td>
+			</tr>
+			</th:block>
+			<tr>
+				<td colspan="2">
+					<a th:href="@{/theater/theater_view(pg=${pg}, seq=${seq})}">목록</a>
+					<a th:href="@{/theater/screen/screen_writeForm(pg=${pg}, seq=${seq})}">초기화</a>
+				</td>
+			</tr>
+		</table>
+
+    <table border="1">
+    	<tr>
+    		<td rowspan="2">
+    			<fieldset>
+    				<legend>좌석 종류</legend>
+    				<label>일반석</label>
+    				<input type="radio" name="seat_code" value="1" checked><br>
+    				<label>커플석</label>
+    				<input type="radio" name="seat_code" value="2"><br>
+    			</fieldset>
+    		</td>
+    		<td>
+    			<img alt="screen" src="/image/screen.jpg">
+    		</td>
+    	</tr>
+    	<tr> 		
+    		<td>
+    		
+    <div align="center">
+    <th:block th:if="${y_index != 0}" align="center">
+	    <th:block th:each="y : ${#numbers.sequence(1, y_index)}">
+	    	<div>
+	    		<th:block>
+	    			<span th:each="x : ${#numbers.sequence(1, x_index)}">
+	    					<input type="button"
+	    				 	 class="btn-outline-primary"
+	    				 	 th:data-row="${y}"
+	    				 	 th:data-col="${x}"
+	    				 	 th:data-info="${seat_code != null ? seat_code : 1}"
+	    				 	 th:data-purchase="n" 
+	    				 	 th:onclick="'seat_stat(' + ${y} + ', ' + ${x} + ')'"
+	    				 	 th:value="${x}">
+	    				<th:block th:if="${aisle != null}">
+	    				<th:block th:if="${#lists.contains(aisle_values, x)}">
+	    					<input type="button" class="btn" value="">
+	    				</th:block>
+	    				</th:block>
+	    			</span>
+	    		</th:block>
+	    	</div>
+	    </th:block>
+	</th:block>
+	</div>    		
+    		
+    		</td>
+    	</tr>  	
+    </table>
+    
+
+
+	<div align="center">
+	<input type="button" value="상영관 등록" onclick="checkInput()">
+	</div>
+	</form>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>나의 페이지 메인</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+function confirmDelete() {
+    if (confirm("정말 탈퇴하시겠습니까?")) {
+        document.getElementById('deleteForm').submit();
+    }
+}
+</script>
+<style>
+/*  header가 맨 위에 오도록 설정 */
+.comtainer{
+	width: 1100px;
+}
+#header-container {
+    width: 100%;
+    background-color: #ffffff;
+    position: relative;
+    z-index: 10;
+}
+
+/*  #main이 header 아래에 오도록 설정 */
+#main {
+    width: 1100px;
+    height: 700px;
+    margin: auto;
+    display: flex;
+    align-items: flex-start;
+    margin-top: 50px;  /*  header와 간격 추가 */
+}
+
+#nav {
+    width: 220px;
+    background: #FFFFFF;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #aaa;
+    margin-left: 90px;
+}
+
+.nav-header {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px;
+    background: #3B3B3B;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.nav-header a {
+    color: white; /* 글씨색 변경 */
+    text-decoration: none; /* 밑줄 제거 */
+    display: block; /* a 태그 전체를 클릭 가능하게 */
+}
+.nav-header a:hover {
+    color:#80672C;
+}
+
+.nav-section {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-section li {
+    padding: 12px;
+    border-bottom: 1px solid #555;
+}
+
+.nav-section li:last-child {
+    border-bottom: none;
+}
+
+.nav-section a {
+    text-decoration: none;
+    color:#3B3B3B;
+    font-size: 15px;
+    display: block;
+    transition: 0.3s;
+}
+
+.nav-section a:hover {
+    color:#80672C;
+}
+
+#section {
+	margin-left: 50px;
+    width: 500px;
+    height: 80%;
+    
+}
+</style>
+</head>
+<body>
+
+    <!--  header가 맨 위로 오도록 배치 -->
+    <div id="header-container">
+        <div th:replace="~{layouts/header}"></div>
+    </div>
+
+    <!--  #main이 header 아래에 배치 -->
+    <div class="container" >
+        <div id="main">
+            <!-- 사이드바 (왼쪽 메뉴) -->           
+			<nav id="nav">
+			    <div class="nav-header"><a href="/mypageMain">My page</a></div>
+			
+			    <ul class="nav-section">
+			        <li><a href="#">예매내역</a></li>
+			        <li><a href="#">구매내역</a></li>
+			        <li><a href="/mypage/question_board_user_list">내 문의내역</a></li>
+			        <li><a href="#">내 찜내역</a></li>
+			        <li><a href="/member/modifyForm">내정보 변경</a></li>
+			        <li><a href="#" onclick="confirmDelete(); return false;">회원탈퇴</a></li>
+			        <li><a href="/main">메인화면</a></li>
+			    </ul>
+			
+			    <!-- 🚀 Form을 ul 바깥으로 이동 -->
+			    <form id="deleteForm" action="/member/delete" method="post" style="display: none;">
+			        <input type="hidden" name="id" th:value="${session.memId}" />
+			    </form>
+			</nav>
+            
+            
+            <!-- 컨텐츠 섹션 -->
+            <section id="section">
+				<th:block th:if="${req == 'none'}">
+				    <div style="background: linear-gradient(to right, #241D0B, #302710); color: white; padding: 30px; border-radius: 15px; text-align: left; width: 650px;">
+				        <div style="display: flex; align-items: center;">
+				            <!-- 등급 아이콘 -->
+				            <div style="margin-right: 20px;">
+				                <th:block th:if="${member.grade == 'vvip'}">
+				                    <img src="/gradeimage/vvip.jpg" width="100" height="100">
+				                </th:block>
+				                <th:block th:if="${member.grade == 'vip'}">
+				                    <img src="/gradeimage/vip.jpg" width="100" height="100">
+				                </th:block>
+				                <th:block th:if="${member.grade == 'gold'}">
+				                    <img src="/gradeimage/gold.jpg" width="100" height="100">
+				                </th:block>
+				                <th:block th:if="${member.grade == 'silver'}">
+				                    <img src="/gradeimage/silver.jpg" width="100" height="100">
+				                </th:block>
+				                <th:block th:if="${member.grade == 'basic'}">
+				                    <img src="/gradeimage/basic.jpg" width="100" height="100">
+				                </th:block>
+				            </div>
+				            
+				            <!-- 유저 정보 -->
+				            <div>
+				                <h2 style="font-weight: bold;">안녕하세요! <span style="color: #5FC5F7;">[[${member.name}]]</span>님</h2>
+				                <p style="font-size: 20px; font-weight: bold;">현재 등급: <span style="color: #5FC5F7;">[[${member.grade}]]</span></p>
+				                <p style="font-size: 18px;">현재 포인트: <span style="font-weight: bold;">[[${member.vippoint}]] P</span></p>
+				            </div>
+				        </div>
+				
+				        <!-- 진행 바 -->
+				        <div style="margin-top: 20px;">
+				            <div style="display: flex; justify-content: space-between; font-size: 14px; color: #ccc;">
+				                <span>BASIC</span><span>SILVER</span><span>GOLD</span><span>VIP</span><span>VVIP</span>
+				            </div>
+								<div style="background: #444; height: 10px; border-radius: 5px; margin-top: 5px; position: relative;">
+								    <div th:with="progress=
+								        ${member.vippoint >= 5000 ? 100 :
+								         member.vippoint >= 2000 ? 70 + ((member.vippoint - 2000) / 3000.0) * 30 :
+								         member.vippoint >= 500 ? 40 + ((member.vippoint - 500) / 1500.0) * 30 :
+								         member.vippoint >= 100 ? 20 + ((member.vippoint - 100) / 400.0) * 20 :
+								         member.vippoint >= 0 ? (member.vippoint / 100.0) * 20 : 0}" 
+								         th:style="'background: #5FC5F7; height: 10px; border-radius: 5px; width:' + ${progress} + '%; max-width: 100%;'">
+								    </div>
+								</div>
+				        </div>
+				
+				        <!-- 다음 등급까지 남은 포인트 안내 -->
+				        <div style="margin-top: 15px; font-size: 16px; font-weight: bold; color: #5FC5F7;">
+				            <th:block th:if="${member.vippoint >= 5000}">
+				                최고 등급 VVIP 입니다!
+				            </th:block>
+				            <th:block th:if="${member.vippoint < 5000 and member.vippoint >= 2000}">
+				                다음 VVIP 등급까지 <span style="color: #FFC107;">[[5000 - ${member.vippoint}]] P</span> 남았어요!
+				            </th:block>
+				            <th:block th:if="${member.vippoint < 2000 and member.vippoint >= 500}">
+				                다음 VIP 등급까지 <span style="color: #FFC107;">[[2000 - ${member.vippoint}]] P</span> 남았어요!
+				            </th:block>
+				            <th:block th:if="${member.vippoint < 500 and member.vippoint >= 100}">
+				                다음 Gold 등급까지 <span style="color: #FFC107;">[[500 - ${member.vippoint}]] P</span> 남았어요!
+				            </th:block>
+				            <th:block th:if="${member.vippoint < 100 and member.vippoint >= 0}">
+				                다음 Silver 등급까지 <span style="color: #FFC107;">[[100 - ${member.vippoint}]] P</span> 남았어요!
+				            </th:block>
+				        </div>
+				    </div>
+				</th:block>
+				            
+                <th:block th:if="${req != 'none'}">
+					<div th:replace="~{${req}}"></div>
+				</th:block>
+            </section>
+        </div>
+    </div>
+    <div id="header-container">
+        <div th:replace="~{layouts/footer}"></div>
+    </div>
+</body>
+</html>

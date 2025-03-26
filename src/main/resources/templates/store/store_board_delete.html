@@ -1,0 +1,16 @@
+
+<script type="text/javascript" th:inline="javascript">
+window.onload = function() {
+	setTimeout(function() {
+		var result = /*[[${result}]]*/ 0;
+		if (result > 0) {
+			alert("[[${seq}]]번 상품 삭제 성공");
+			location.href = "/store/store_board_list?pg=[[${pg}]]"
+		} else {
+			alert("[[${seq}]]번 상품 삭제 실패");
+			history.back();
+		}
+		
+	}, 100)
+}
+</script>

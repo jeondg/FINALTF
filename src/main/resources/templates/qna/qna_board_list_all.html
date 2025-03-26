@@ -1,0 +1,67 @@
+
+<style type="text/css">
+.paging { color: blue; text-decoration: none;}
+.currentPaging { color: red; text-decoration: none;}
+.subjectA {
+	color: black;
+	text-decoration: none;
+}
+.subjectA:hover {
+	color: #01bde7; text-decoration: underline;
+}
+</style>
+
+
+
+<div class="container">
+
+<table border="1" class="table" style="width: 760px;">
+	<tr align="center" class="table-danger">
+		<td>번호</td>
+		<td>구분</td>
+		<td>제목</td>
+		<td>작성일</td>
+	</tr>
+	
+	<tr th:each="dto : ${list}" align="center">
+		<td>[[${dto.seq}]]</td>
+		<td>[[${dto.section}]]</td>
+		<td><a th:href="@{/qna/qna_board_view(pg=${pg}, seq=${dto.seq})}"
+		 class="subjectA">[[${dto.subject}]]</a></td>
+		<td>[[${dto.logtime}]]</td>
+	</tr>
+	
+	<tr>
+		<td colspan="4" align="center">
+			<span th:if="${startPage > 3}">
+				<a th:href="@{/qna/qna_board_list_all(pg=${startPage-1})}"
+				 class="paging">[이전]</a>
+			</span>
+			
+			<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+				<span th:if="${pg == i}">
+					[<a th:href="@{/qna/qna_board_list_all(pg=${i})}"
+					 class="currentPaging">[[${i}]]</a>]
+				</span>
+				<span th:if="${pg != i}">
+					[<a th:href="@{/qna/qna_board_list_all(pg=${i})}"
+					 class="paging">[[${i}]]</a>]
+				</span>
+			</span>
+			
+			<span th:if="${endPage < totalP}">
+				<a th:href="@{/qna/qna_board_list_all(pg=${endPage+1})}"
+				 class="paging">[다음]</a>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<a href="/qna/qna_board_writeForm" class="paging">자주찾는질문 쓰기</a>
+		</td>
+	</tr>
+</table>
+
+</div>
+
+

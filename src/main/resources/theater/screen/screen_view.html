@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<script type="text/javascript">
+	function isDelete() {
+		if (confirm("정말 삭제하시겠습니까?")) {
+			location.href = "/theater/screen/screen_delete?pg=[[${pg}]]&seq=[[${seq}]]&screen_num=[[${screen_num}]]&screen_pg=[[${screen_pg}]]&theater_code=[[${theater_code}]]";
+		}
+	}
+	
+	function seat_stat() {}
+</script>
+</head>
+<body>
+
+
+<div class="container">
+	<table class="table" style="width:500px; margin:auto;">
+		<tr align="center">
+			<td rowspan="2">
+				<img alt="" th:src="@{/storage/} + ${screen.screen_image1}"
+				 width="250" height="250">
+			</td>
+			<td width="125">상영관 이름</td>
+			<td width="125">[[${screen.screen_name}]]</td>
+		</tr>
+		<tr align="center">
+			<td>기본 가격</td>
+			<td>[[${screen.screen_cost}]]</td>
+		</tr>
+		
+		<!--/* 좌석정보 표시 테스트 */-->
+		
+		<tr>
+		    <td colspan="3" valign="top" align="center">
+		        <th:block th:if="${seat_list != null}" align="center">
+		            <!-- 좌석을 y_index 기준으로 줄을 나누어 출력 -->
+		            <div th:each="y : ${#numbers.sequence(1, screen.y_index)}">
+		                <div>
+		                    <th:block th:each="seat : ${seat_list}" th:if="${seat.y_index == y}">
+		                        <span style="margin: 5px;">
+		                            <input type="button" 
+		                                   th:value="${seat.x_index}" 
+		                                   th:classappend="${seat.seat_code == 1} ? 'btn-outline-primary' : 'btn btn-danger btn-sm'" 
+		                                   onclick="seat_stat()">
+		                            <!-- aisles (통로) 처리 -->
+		                            <th:block th:if="${#lists.contains(aisle_values, seat.x_index)}">
+		                                <!-- 통로 위치에 투명 버튼 추가 -->
+		                                <input type="button" class="btn" value="">
+		                            </th:block>       
+		                        </span>
+		                    </th:block>
+		                </div>
+		            </div>
+		        </th:block>
+		    </td>
+		</tr>	
+				
+		<tr>
+			<td colspan="3" align="center">
+				<input type="button" value="목록"
+				 th:onclick="location.href='/theater/theater_view?pg=[[${pg}]]&seq=[[${seq}]]'">
+				<input type="button" value="수정"
+				 th:onclick="location.href='/theater/screen/screen_modifyForm?pg=[[${pg}]]&seq=[[${seq}]]&screen_pg=[[${screen_pg}]]&screen_num=[[${screen_num}]]&theater_code=[[${theater_code}]]&x_index=[[${screen.x_index}]]&y_index=[[${screen.y_index}]]'">
+				<input type="button" value="삭제" onclick="isDelete()">
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+</body>
+</html>

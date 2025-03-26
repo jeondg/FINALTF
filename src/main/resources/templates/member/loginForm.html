@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+#maingo {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    background-color: #FFA500;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#maingo:hover {
+    background-color: #FFA500;
+    color: #80672C;
+}
+</style>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+    <div id="header-container">
+        <div th:replace="~{layouts/header}"></div>
+    </div>
+
+<script type="text/javascript" src="/js/memberScript.js"></script>
+		<div style="width: 300px; margin: auto; margin-top:70px;">
+			<form action="login" name="form1" method="post">
+				<table class="table">
+					<tr align="center">
+						<td>아이디</td>
+						<td><input type="text" name="id"></td>
+					</tr>
+					<tr align="center">
+						<td>비밀번호</td>
+						<td><input type="password" name="pwd"></td>
+					</tr>
+					<tr align="center">
+						<td colspan="2">
+							<input type="submit"value="로그인" onclick="checkLogin()">
+							<input type="button" value="회원가입" onclick="location.href='writeForm'">
+						</td>
+					</tr>
+				</table>
+			</form>
+			<a id="maingo" href="/main">메인화면</a>	
+		</div>
+    <div id="header-container">
+        <div th:replace="~{layouts/footer}"></div>
+    </div>
+</body>
+</html>

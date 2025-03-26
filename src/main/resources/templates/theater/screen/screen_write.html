@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+window.onload = function() {
+	var result = "[[${result}]]";
+	setTimeout(function() {
+		//alert("[[${result}]]");
+		//alert("[[${result > 0}]]");
+		if (result > 0) {
+			alert("상영관 등록 성공");
+			location.href = "/theater/theater_view?pg=[[${pg}]]&seq=[[${seq}]]";
+			// 뒤에 pg랑 seq(극장번호) 붙여야됌
+		} else {
+			alert("상영관 등록 실패");
+			history.back();
+		}
+	}, 100)
+}
+</script>
+</head>
+<body>
+
+</body>
+</html>

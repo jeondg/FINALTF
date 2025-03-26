@@ -1,0 +1,84 @@
+
+<script type="text/javascript">
+function checkInput() {
+	var frm = document.form1;
+	if (!frm.imageid.value || frm.imageid.value == "img_") {
+		alert("상품코드를 입력하세요");
+		frm.imageId.focus();
+		return false;
+	}
+	if (!frm.imagename.value) {
+		alert("상품명을 입력하세요");
+		frm.imagename.focus();
+		return false;
+	}
+	if (!frm.imageprice.value || isNaN(frm.imageprice.value)) {
+		alert("단가를 숫자로 입력하세요");
+		frm.imagePrice.value = "";
+		frm.imagePrice.focus();
+		return false;
+	}
+	if (!frm.imageqty.value || isNaN(frm.imageqty.value)) {
+		alert("개수를 숫자로 입력하세요");
+		frm.imageqty.value = "";
+		frm.imageqty.focus();
+		return false;
+	}
+	if (!frm.imagecontent.value) {
+		alert("내용을 입력하세요");
+		frm.imagecontent.focus();
+		return false;
+	}
+	if (!frm.img.value) {
+		alert("파일을 선택하세요");
+		frm.img.focus();
+		return false;
+	}
+	frm.submit();
+}
+</script>
+
+<div class="container">
+	<form action="/store/store_board_write" name="form1" method="post"
+	 enctype="multipart/form-data">
+	 	<h3>상품 등록</h3>
+		<table class="table" border="1" style="width: 500px;">
+			<tr>
+				<td>상품코드</td>
+				<td><input type="text" name="imageid" size="42" value="img_"></td>
+			</tr>
+			<tr>
+				<td>상품명</td>
+				<td><input type="text" name="imagename" size="42"></td>
+			</tr>
+			<tr>
+				<td>단가</td>
+				<td><input type="text" name="imageprice" size="42"></td>
+			</tr>
+			<tr>
+				<td>개수</td>
+				<td><input type="text" name="imageqty" size="42"></td>
+			</tr>
+			<tr>
+				<td>내용</td>
+				<td><textarea rows="10" cols="43" name="imagecontent"></textarea></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<!-- ImageboardDTO의 image1과 똑같은 이름을 사용하면 안된다. -->
+					<input type="file" name="img" size="42">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="상품등록"
+					 onclick="checkInput()">
+					<input type="reset" value="다시작성">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><a href="/store/store_board_list">목록</a></td>
+			</tr>
+		</table>
+	</form>
+</div>

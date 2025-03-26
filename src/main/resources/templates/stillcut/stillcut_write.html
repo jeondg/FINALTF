@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript" th:inline="javascript">
+window.onload = function() {
+	var stillcut_result = /*[[${stillcut_result}]]*/ null;
+	var result = /*[[${result}]]*/ "";
+	setTimeout(function() {
+		if (stillcut_result != null) {
+			alert(result);
+			location.href = "/stillcut/stillcut_list?pg=1&moviecode=" + stillcut_result.moviecode;
+		} else {
+			alert(result);
+			history.back();
+		}
+	}, 100)
+}
+</script>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<div class="container">
+<p>사진등록 처리 페이지</p>
+</div>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

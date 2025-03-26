@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+	function checkInput() {
+		var frm = document.form1;
+		if (!frm.stillcut_name.value) {
+			alert("사진 제목을 입력하세요");
+			frm.stillcut_name.focus();
+			return false;
+		}
+		if (!frm.stillcut_img.value) {
+			alert("사진을 선택하세요");
+			frm.stillcut_img.focus();
+			return false;
+		}
+		
+		frm.submit();
+	}
+</script>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<div class="container">
+	<form action="/stillcut/stillcut_write" name="form1" method="post"
+	 enctype="multipart/form-data">
+	 	<input type="hidden" name="moviecode" th:value="${moviecode}">
+		<h3 align="center">[[${info.title}]] 사진 등록</h3>
+		<table class="table" style="width: 400px; margin: auto;">
+			<tr>
+				<td>사진 제목</td>
+				<td><input type="text" name="stillcut_name"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="file" name="stillcut_img">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="사진 등록" onclick="checkInput()">
+					<input type="reset" value="다시 작성">
+					<input type="button" value="목록" th:onclick="location.href='/stillcut/stillcut_list?pg=1&moviecode=[[${moviecode}]]'">
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

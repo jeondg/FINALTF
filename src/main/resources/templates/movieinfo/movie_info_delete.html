@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+window.onload = function() {
+	var result = "[[${result}]]";
+	setTimeout(function() {
+		if (result > 0) {
+			alert("[[${seq}]]번 삭제 성공");
+			location.href = "/movieinfo/movie_info_list?pg=[[${pg}]]";
+		} else {
+			alert("[[${seq}]]번 삭제 실패");
+			history.back();
+		}
+	}, 100)
+}
+</script>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<p>삭제페이지</p>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

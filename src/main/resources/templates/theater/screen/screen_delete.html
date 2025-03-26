@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+window.onload = function() {
+	var result = "[[${result}]]";
+	setTimeout(function() {
+		if (result > 0) {
+			alert("[[${theater_code}]] 극장 [[${screen_seq}]]번 상영관 삭제 완료");
+			location.href = "/theater/theater_view?pg=[[${pg}]]&seq=[[${seq}]]";
+		} else {
+			alert("[[${theater_code}]] 극장 [[${screen_seq}]]번 상영관 삭제 실패");
+			history.back();
+		}
+	}, 100)
+}
+</script>
+</head>
+<body>
+
+</body>
+</html>

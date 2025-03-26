@@ -1,0 +1,14 @@
+
+<script type="text/javascript" th:inline="javascript">
+window.onload = function() {
+	setTimeout(function() {
+		var result = /*[[${result}]]*/ 0;
+		if ( result > 0 ) {
+			alert("[[${seq}]]번글 수정 성공")
+		} else {
+			alert("[[${seq}]]번글 수정 실패")
+		}
+		location.href = "/qna/qna_board_view?seq=[[${seq}]]&pg=[[${pg}]]"
+	}, 100)
+}
+</script>

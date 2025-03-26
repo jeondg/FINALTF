@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>POPBOX | 영화, 예매, 극장</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-color: #fff;
+        }
+        .navbar {
+            background-color: #29220A;
+            border-bottom: 1px solid #636363;
+            padding: 10px 15px;
+        }
+        .container-fluid {
+            max-width: 900px; /* 전체 가로 폭 압축 */
+            margin: 0 auto;
+        }
+        .navbar-nav {
+            width: 100%;
+            display: flex;
+            justify-content: space-between; /* 요소들 간격 균형 */
+            align-items: center;
+            gap: 10px; /* 요소들 간격 조정 */
+        }
+        .nav-item a {
+            color: #D8D8D8;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 5px 10px; /* 패딩 줄이기 */
+        }
+        .nav-item a:hover {
+            color: #ffcc00;
+        }
+        .menuimage {
+            height: 28px; /* 아이콘 크기 줄이기 */
+            width: 28px;
+        }
+        /* 고객센터 & 로그인 텍스트 스타일 */
+        .nav-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .nav-icon a {
+            font-size: 10px;
+            color: #BDBDBD;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .nav-icon a:hover {
+            color: #ffcc00;
+        }
+        /* POPBOX 로고 스타일 */
+        .logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #29220A;
+            padding: 3px;
+            width: fit-content;
+            border-radius: 3px;
+        }
+        .logo-text {
+            display: flex;
+        }
+        /* POPBOX 박스 크기 줄이기 */
+        .letter {
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            width: 18px;
+            height: 22px;
+            display: flex;
+            background-color: #F2F2F2;
+            justify-content: center;
+            align-items: center;
+            margin: 1px;
+        }
+        .letter:nth-child(odd) {
+            color: #FFD700;
+        }
+        .letter:nth-child(even) {
+            color: #FFA500;
+        }
+        /* ENJOY THE MOVIE (배경색 분리) */
+        .enjoy-text {
+            font-size: 12px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            text-transform: uppercase;
+            display: flex;
+            color: #ffffff;
+            justify-content: center;
+            line-height: 1;
+            margin-top: 3px;
+        }
+        /*.enjoy-text span:nth-child(odd) {
+            color: #FFD700;
+        }
+        .enjoy-text span:nth-child(even) {
+            color: #FFA500;
+        }*/
+        #main_boxoffice{
+        	background: linear-gradient(to bottom, black, #302710);
+        }
+        
+        
+        
+		/* 마우스 스크롤 애니메이션 컨테이너 */
+		.mouse-scroll {
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    margin-top: 50px; /* 원하는 위치 조정 */
+		}
+		
+		/* 마우스 모양 */
+		.mouse {
+		    width: 20px;
+		    height: 30px;
+		    border: 2px solid #C0C0C0; /* 회색 테두리 */
+		    border-radius: 25px;
+		    position: relative;
+		}
+		
+		/* 스크롤 애니메이션 (안쪽 점) */
+		.scroll {
+		    width: 3px;
+		    height: 5px;
+		    background-color: #C0C0C0; /* 점 색상 */
+		    border-radius: 50%;
+		    position: absolute; /* 부모 컨테이너를 기준으로 위치시킴 */
+		    top: 3px;	/* top: 3px;을 제거하면, 애니메이션이 비활성화되었을 때 요소가 어디에 있어야 하는지 명확하지 않을 수 있음. */
+		    left: 50%; /* 부모 요소의 가로 가운데로 이동 */
+		    transform: translateX(-50%); /* left 값만 지정하면 요소의 왼쪽 끝이 50% 위치로 이동하므로 얘를 써서 가로 중앙 정렬을 정확히 맞춤 */
+		    animation: scroll-animation 1.5s infinite ease-in-out; /* 에니메이션 1.5초 무한반복 천천히-중간빨라졌다-천천히*/
+		}
+		
+		/* 점이 위아래로 움직이는 애니메이션 */
+		@keyframes scroll-animation {
+		    0% {
+		        top: 3px; /* 시작시 3px */
+		        opacity: 1; /* 투명도 1=불투명 0=반투명 */
+		    }
+		    50% {
+		        top: 10px; /* 중간에 7px 내려감 */
+		        opacity: 0.5;
+		    }
+		    100% {
+		        top: 3px;
+		        opacity: 1;
+		    }
+		}
+    </style>
+<script type="text/javascript" th:inline="javascript">
+console.log("session.memId:", /*[[${session.memId}]]*/ "NULL");
+function checkLogin(event) {
+    event.preventDefault(); // 기본 링크 이동 방지
+
+    var isLoggedIn = /*[[${session.memId != null}]]*/ false; // Thymeleaf로 로그인 여부 체크
+
+    if (!isLoggedIn) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "/member/loginForm"; // 로그인 페이지로 이동
+    } else {
+        window.location.href = "/mypageMain"; // 마이페이지 이동
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.wish-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const moviecode = this.dataset.moviecode;
+            const isWished = this.dataset.wished === 'true';
+            const url = `/movieinfo/wish/${moviecode}`;
+            const method = isWished ? 'DELETE' : 'POST';
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        alert('로그인이 필요합니다.');
+                        window.location.href = '/member/loginForm';
+                    }
+                    throw new Error('요청 실패');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 같은 moviecode를 가진 모든 버튼에 대해 UI 업데이트
+                document.querySelectorAll(`.wish-btn[data-moviecode='${moviecode}']`).forEach(btn => {
+                    const heartIcon = btn.querySelector('.heart-icon');
+                    const countSpan = btn.nextElementSibling;
+
+                    btn.dataset.wished = (!isWished).toString();
+                    heartIcon.textContent = isWished ? '🤍' : '❤️';
+                    countSpan.textContent = data.wishCount;
+                });
+            })
+            .catch(err => console.error(err));
+        });
+    });
+});
+
+window.addEventListener("pageshow", function (event) {
+    // 새로 로드되었거나, 뒤로가기 복원된 경우 모두 초기화
+    localStorage.removeItem("selectedItems");
+});
+</script>
+
+</head>
+<body>
+
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <!-- 왼쪽 메뉴 (고객센터 & 메뉴) -->
+                <li class="nav-item nav-icon">
+                    <a href="/customerServiceMain">고객센터</a>
+                    <a href="#">
+                        <img class="menuimage" src="/menuimage/mainmenubar.jpg" alt="MENU">
+                    </a>                           
+                </li>
+
+                <li class="nav-item"><a href="#">영화</a></li>
+                <li class="nav-item"><a href="/booking">예매</a></li>
+
+                <!-- 중앙 POPBOX 로고 -->
+				<li class="nav-item logo-wrapper">
+				    <div class="logo-clickable" onclick="location.href='/main'"> <!--  클릭하면 /main 이동 -->
+				        <div class="logo-container">
+				            <div class="logo-text">
+				                <div class="letter">P</div>
+				                <div class="letter">O</div>
+				                <div class="letter">P</div>
+				                <div class="letter">B</div>
+				                <div class="letter">O</div>
+				                <div class="letter">X</div>
+				            </div>
+				        </div>
+				        <div class="enjoy-text">
+				            <span>E</span><span>N</span><span>J</span><span>O</span><span>Y</span>
+				            <span> </span>
+				            <span>T</span><span>H</span><span>E</span>
+				            <span> </span>
+				            <span>M</span><span>O</span><span>V</span><span>I</span><span>E</span>
+				        </div>
+				    </div>
+				</li>
+
+
+                <li class="nav-item"><a href="/store/store_board_list2">스토어</a></li>
+                <li class="nav-item"><a href="#">VIP</a></li>
+
+                <!-- 오른쪽 메뉴 (로그인 & 마이페이지) -->
+                <li class="nav-item nav-icon">
+                    <th:block th:if="${session.memId == null}">
+                        <a href="/member/loginForm">로그인</a>
+                    </th:block>
+                    <th:block th:if="${session.memId != null}">
+                        <a href="/member/logout">로그아웃</a>
+                    </th:block>
+                    <th:block th:if="${session.memId == 'hong'}">
+                    	<a href="/admin/admin_index"> 관리자 홈페이지로</a>
+                    </th:block>
+                    <a href="#" onclick="checkLogin(event)">
+                        <img class="menuimage" src="/menuimage/mainmypage.jpg" alt="MYPAGE">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    
+    <div id="main_boxoffice">
+		<table style="margin-top: 60px; margin-left:auto; margin-right:auto;">
+			<tr>
+				<td colspan="4" align="center" style="width:900px;"><span style="color: #F2F2F2;">박스오피스</span>
+					<span style="position: absolute; right: 300px; color: #ADADAD; font-size: 10px;">더 보기 +</span>
+				</td>
+			</tr>
+		    <tr>
+		        <!-- 각 영화 정보를 열로 정렬 -->
+		        <td th:each="dto1 : ${list_boxoffice}" align="center">
+		            <!-- 영화 포스터 -->
+		            <a th:href="|/movieinfo/moviedetail?moviecode=${dto1.moviecode}|">
+		                <img style="padding:10px;"width="230" height="320" th:src="|/movie_poster/${dto1.poster1}|" alt="영화 포스터">
+		            </a>
+		
+					<!-- 좋아요 및 예매 버튼 -->
+					<div style="margin-top: 10px; text-align: center;">
+					    <button class="wish-btn" 
+					            th:data-moviecode="${dto1.moviecode}" 
+					            th:data-wished="${dto1.wished}" 
+					            style="background:none; border:none; font-size:20px; color:white; cursor:pointer;">
+					        <span class="heart-icon" th:text="${dto1.wished} ? '❤️' : '🤍'"></span>
+					    </button>
+					    <span class="wish-count" th:text="${dto1.wishCount}" style="color:white;"></span> <!-- 찜 개수 표시 -->
+					    
+					    <button style="background-color: #007bff; color: white; border: none; padding: 5px 10px; margin-left: 10px; cursor: pointer;">
+					        예매
+					    </button>
+					</div>
+		        </td>
+		    </tr>
+		    
+
+		</table>
+		<table style="margin-top:30px; margin-bottom:50px; width:900px; margin-left:auto; margin-right:auto;">
+		    <tr style="text-align:center; color:#F2F2F2;">
+		    	<td style="width:225px; background-color:#241D0B; padding-top:20px; padding-bottom:20px;">검색은 희망사항<div class="separator"></div></td>
+		    	<td style="width:225px; background-color:#241D0B; padding-top:20px; padding-bottom:20px;">상영시간표<div class="separator"></div></td>
+		    	<td style="width:225px; background-color:#241D0B; padding-top:20px; padding-bottom:20px;">박스오피스<div class="separator"></div></td>
+		    	<td style="width:225px; background-color:#241D0B; padding-top:20px; padding-bottom:20px;">예매</td>
+		    </tr>
+		</table>
+		<!-- 마우스 스크롤 애니메이션 -->
+		<div class="mouse-scroll" style="margin-bottom:20px;">
+		    <div class="mouse">
+		        <div class="scroll"></div>
+		    </div>
+		</div>
+    </div>
+    
+    
+    <div id="main-total">
+		<table style="margin-top: 50px; margin-left:auto; margin-right:auto; margin-bottom:30px;">
+			<tr>
+				<td colspan="4" align="left" style="width:900px;"><span style="color: #29220A;">누적관객수 순</span>
+					<span style="position: absolute; right: 300px; color: #695719; font-size: 10px;">더 보기 +</span>
+				</td>
+			</tr>
+		    <tr>
+		        <!-- 각 영화 정보를 열로 정렬 -->
+		        <td th:each="dto2 : ${list_total}" align="center">
+		            <!-- 영화 포스터 -->
+		            <a th:href="|/movieinfo/moviedetail?moviecode=${dto2.moviecode}|">
+		                <img style="padding:10px;"width="230" height="320" th:src="|/movie_poster/${dto2.poster1}|" alt="영화 포스터">
+		            </a>
+		
+					<!-- 좋아요 및 예매 버튼 -->
+					<div style="margin-top: 10px; text-align: center;">
+					    <button class="wish-btn" 
+					            th:data-moviecode="${dto2.moviecode}" 
+					            th:data-wished="${dto2.wished}" 
+					            style="background:none; border:none; font-size:20px; color:white; cursor:pointer;">
+					        <span class="heart-icon" th:text="${dto2.wished} ? '❤️' : '🤍'"></span>
+					    </button>
+					    <span class="wish-count" th:text="${dto2.wishCount}"></span> <!-- 찜 개수 표시 -->
+					    
+					    <button style="background-color: #007bff; color: white; border: none; padding: 5px 10px; margin-left: 10px; cursor: pointer;">
+					        예매
+					    </button>
+					</div>
+		        </td>
+		    </tr>
+		</table>
+    </div>
+    
+    
+    <div id="main-korea" style="background-color:#D4D18B;">
+		<table style="margin-top: 50px; margin-left:auto; margin-right:auto; margin-bottom:30px;">
+			<tr>
+				<td colspan="4" align="left" style="width:900px;"><span style="color: #29220A;">국내영화 박스오피스</span>
+					<span style="position: absolute; right: 300px; color: #695719; font-size: 10px;">더 보기 +</span>
+				</td>
+			</tr>
+		    <tr>
+		        <!-- 각 영화 정보를 열로 정렬 -->
+		        <td th:each="dto3 : ${list_korea}" align="center">
+		            <!-- 영화 포스터 -->
+		            <a th:href="|/movieinfo/moviedetail?moviecode=${dto3.moviecode}|">
+		                <img style="padding:10px;"width="230" height="320" th:src="|/movie_poster/${dto3.poster1}|" alt="영화 포스터">
+		            </a>
+		
+					<!-- 좋아요 및 예매 버튼 -->
+					<div style="margin-top: 10px; text-align: center;">
+					    <button class="wish-btn" 
+					            th:data-moviecode="${dto3.moviecode}" 
+					            th:data-wished="${dto3.wished}" 
+					            style="background:none; border:none; font-size:20px; color:white; cursor:pointer;">
+					        <span class="heart-icon" th:text="${dto3.wished} ? '❤️' : '🤍'"></span>
+					    </button>
+					    <span class="wish-count" th:text="${dto3.wishCount}"></span> <!-- 찜 개수 표시 -->
+					    
+					    <button style="background-color: #007bff; color: white; border: none; padding: 5px 10px; margin-left: 10px; cursor: pointer;">
+					        예매
+					    </button>
+					</div>
+		        </td>
+		    </tr>
+		</table>
+    </div>
+    
+    <div id="main-foreign" style="background-color:#FFFCCC">
+		<table style="margin-top: 50px; margin-left:auto; margin-right:auto; margin-bottom:30px;">
+			<tr>
+				<td colspan="4" align="left" style="width:900px;"><span style="color: #29220A;">해외영화 박스오피스</span>
+					<span style="position: absolute; right: 300px; color: #695719; font-size: 10px;">더 보기 +</span>
+				</td>
+			</tr>
+		    <tr>
+		        <!-- 각 영화 정보를 열로 정렬 -->
+		        <td th:each="dto4 : ${list_foreign}" align="center">
+		            <!-- 영화 포스터 -->
+		            <a th:href="|/movieinfo/moviedetail?moviecode=${dto4.moviecode}|">
+		                <img style="padding:10px;"width="230" height="320" th:src="|/movie_poster/${dto4.poster1}|" alt="영화 포스터">
+		            </a>
+		
+					<!-- 좋아요 및 예매 버튼 -->
+					<div style="margin-top: 10px; text-align: center;">
+					    <button class="wish-btn" 
+					            th:data-moviecode="${dto4.moviecode}" 
+					            th:data-wished="${dto4.wished}" 
+					            style="background:none; border:none; font-size:20px; color:white; cursor:pointer;">
+					        <span class="heart-icon" th:text="${dto4.wished} ? '❤️' : '🤍'"></span>
+					    </button>
+					    <span class="wish-count" th:text="${dto4.wishCount}"></span> <!-- 찜 개수 표시 -->
+					    
+					    <button style="background-color: #007bff; color: white; border: none; padding: 5px 10px; margin-left: 10px; cursor: pointer;">
+					        예매
+					    </button>
+					</div>
+		        </td>
+		    </tr>
+		</table>
+    </div>    
+    
+    <div id="header-container">
+        <div th:replace="~{layouts/footer}"></div>
+    </div>
+</body>
+</html>

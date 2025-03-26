@@ -1,0 +1,175 @@
+<!-- header.html -->
+<header class="header-container">
+	<script type="text/javascript" th:inline="javascript">
+	function checkLogin2(event) {
+	    event.preventDefault(); // 기본 링크 이동 방지
+	
+	    var isLoggedIn = /*[[${session.memId != null}]]*/ false; // Thymeleaf로 로그인 여부 체크
+	
+	    if (!isLoggedIn) {
+	        alert("로그인이 필요합니다.");
+	        window.location.href = "/member/loginForm"; // 로그인 페이지로 이동
+	    } else {
+	        window.location.href = "/mypageMain"; // 마이페이지 이동
+	    }
+	}
+	
+	</script>
+    <style>
+        .header-navbar {
+            background-color: #ffffff;
+            border-bottom: 2px solid #FFBE00;
+            padding: 10px 15px;
+        }
+        .header-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            list-style: none;  /*  리스트 점(•) 제거 */
+            padding: 0;        /*  리스트 기본 패딩 제거 */
+            margin: 0;         /*  리스트 기본 마진 제거 */
+        }
+        .header-item a {
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 5px 10px;
+        }
+        .header-item a:hover {
+            color: #ffcc00;
+        }
+        .header-image {
+            height: 28px;
+            width: 28px;
+        }
+        .header-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .header-icon a {
+            font-size: 10px;
+            color: #666;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .header-icon a:hover {
+            color: #ffcc00;
+        }
+        .header-logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header-logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #FFFFFF;
+            padding: 3px;
+            width: fit-content;
+            border-radius: 3px;
+        }
+        .header-logo-text {
+            display: flex;
+        }
+        .header-letter {
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            width: 18px;
+            height: 22px;
+            display: flex;
+            color: #ffffff;
+            justify-content: center;
+            align-items: center;
+            margin: 1px;
+        }
+        .header-letter:nth-child(odd) {
+            background-color: #FFD700;
+        }
+        .header-letter:nth-child(even) {
+            background-color: #FFA500;
+        }
+        .header-enjoy-text {
+            font-size: 12px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: center;
+            line-height: 1;
+            margin-top: 3px;
+        }
+        .header-enjoy-text span:nth-child(odd) {
+            color: #FFD700;
+        }
+        .header-enjoy-text span:nth-child(even) {
+            color: #FFA500;
+        }
+    </style>
+
+    <nav class="header-navbar">
+        <div class="header-wrapper">
+            <ul class="header-nav">
+                <li class="header-item header-icon">
+                    <a href="/customerServiceMain">고객센터</a>
+                    <a href="#">
+                        <img class="header-image" src="/menuimage/menubar.jpg" alt="MENU">
+                    </a>                           
+                </li>
+
+                <li class="header-item"><a href="#">영화</a></li>
+                <li class="header-item"><a href="/booking">예매</a></li>
+
+                <li class="header-item header-logo-wrapper">
+                	<div class="logo-clickable" onclick="location.href='/main'">
+	                    <div class="header-logo-container">
+	                        <div class="header-logo-text">
+	                            <div class="header-letter">P</div>
+	                            <div class="header-letter">O</div>
+	                            <div class="header-letter">P</div>
+	                            <div class="header-letter">B</div>
+	                            <div class="header-letter">O</div>
+	                            <div class="header-letter">X</div>
+	                        </div>
+	                    </div>
+	                    <div class="header-enjoy-text">
+	                        <span>E</span><span>N</span><span>J</span><span>O</span><span>Y</span>
+	                        <span> </span>
+	                        <span>T</span><span>H</span><span>E</span>
+	                        <span> </span>
+	                        <span>M</span><span>O</span><span>V</span><span>I</span><span>E</span>
+	                    </div>
+                    </div>
+                </li>
+
+                <li class="header-item"><a href="/store/store_board_list2">스토어</a></li>
+                <li class="header-item"><a href="#">VIP</a></li>
+
+                <li class="header-item header-icon">
+                    <th:block th:if="${session.memId == null}">
+                        <a href="/member/loginForm">로그인</a>
+                    </th:block>
+                    <th:block th:if="${session.memId != null}">
+                        <a href="/member/logout">로그아웃</a>
+                    </th:block>
+                    <th:block th:if="${session.memId == 'hong'}">
+                    	<a href="/admin/admin_index"> 관리자 홈페이지로</a>
+                    </th:block>                    
+                    <a href="#" onclick="checkLogin2(event)">
+                        <img class="header-image" src="/menuimage/mypage.jpg" alt="MYPAGE">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

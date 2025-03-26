@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <title>결제 실패</title>
+    <style>
+        body {
+            background-color: #e9f1ff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .wrapper {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 450px;
+            padding: 30px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #ff5252;
+            margin-top: 20px;
+        }
+
+        .fail-icon {
+            width: 80px;
+            margin-top: 10px;
+        }
+
+        .info-box {
+            text-align: left;
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .info-box div {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #3182f6;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <img class="fail-icon" src="https://static.toss.im/lotties/error-spot-no-loop-space-apng.png"/>
+        <h2>결제를 실패했어요</h2>
+
+        <div class="info-box">
+            <div><b>에러 메시지</b> <span th:text="${message}">알 수 없는 오류</span></div>
+            <div><b>에러 코드</b> <span th:text="${code}">ERROR</span></div>
+        </div>
+
+        <div class="button-container">
+            <button class="button" onclick="location.href='/main'">메인으로 돌아가기</button>
+        </div>
+    </div>
+
+</body>
+</html>

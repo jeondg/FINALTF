@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body>
+
+<script type="text/javascript" src="/js/memberScript.js?v=4"></script>
+
+<div class="container">
+	<form action="write" name="form1" method="post">
+		<table class="table" style="width: 400ps; margin: auto;">
+		
+				<tr>
+					<td align="center">아이디</td>
+					<td>
+						<input type="text" name="id"  size="25">
+						<input type="button" value="중복체크" onclick="checkId()">
+					</td>
+				</tr>
+				
+				<tr>
+					<td width="80" align="center" >이름</td>
+					<td><input type="text" name="name" size="42"></td>
+				</tr>				
+		
+				<tr>
+					<td align="center">비밀번호</td>
+					<td><input type="password" name="pwd"  size="42"></td>
+				</tr>
+	
+	
+				<tr>
+					<td align="center">비밀번호 확인</td>
+					<td><input type="password" name="repwd"  size="42"></td>
+				</tr>
+	
+	
+				<tr>
+					<td align="center">성별</td>
+					<td>
+						<input type="radio" name="gender" value="m" checked>남
+						<input type="radio" name="gender" value="f">여
+					</td>
+				</tr>
+	
+		
+				<tr>
+					<td align="center">이메일</td>
+					<td>
+						<input type="text" name="email1">@
+						<select name="email2" style="width:100px;">
+							<option value="naver.com">naver.com</option>
+							<option value="daum.net">daum.net</option>
+							<option value="google.com">google.com</option>
+						</select>
+					</td>
+				</tr>
+		
+		
+				<tr>
+					<td align="center">핸드폰</td>
+					<td>
+						<select name="tel1">
+							<option value="010">010</option>
+							<option value="011">011</option>
+							<option value="016">016</option>
+							<option value="019">019</option>
+						</select>-
+						<input type="text" name="tel2" size="12">-
+						<input type="text" name="tel3" size="12">
+					</td>
+				</tr>
+	
+		
+				<tr>
+					<td align="center">주소</td>
+					<td><input type="text" name="addr"  size="42"></td>
+				</tr>
+			
+				<tr>
+					<td  colspan="2" align="center">
+						<input type="button" value="회원가입" onclick="checkWrite()">
+						<input type="reset" value="다시 작성">
+					</td>
+				</tr>
+		
+		</table>
+	</form>
+	<a href="/main">메인화면</a>		
+
+</div>
+
+</body>
+</html>

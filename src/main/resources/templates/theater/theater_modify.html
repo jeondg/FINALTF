@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+window.onload = function() {
+	setTimeout(function() {
+		var result = "[[${result}]]";
+		if ( result > 0 ) {
+			alert("[[${seq}]]번 수정 성공");
+		} else {
+			alert("[[${seq}]]번 수정 실패");
+		}
+		location.href = "/theater/theater_view?seq=[[${seq}]]&pg=[[${pg}]]";
+	}, 100)
+}
+</script>
+</head>
+<body>
+<p>ㅎㅇ</p>
+</body>
+</html>

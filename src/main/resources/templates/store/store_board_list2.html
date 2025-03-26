@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>스토어 상품목록 (결제 선택)</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+body {
+	background-color: #f8f9fa;
+	padding: 30px;
+	overflow-x: hidden;
+}
+
+.product-list-wrapper {
+	width: 940px;
+	margin: 0 auto;
+}
+
+.product-list {
+	display: grid;
+	grid-template-columns: repeat(4, 220px);
+	gap: 20px;
+	justify-content: center;
+}
+
+.product-card {
+	background-color: white;
+	width: 220px;
+	border-radius: 15px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+	overflow: hidden;
+	text-align: center;
+	position: relative;
+}
+
+.product-card img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+}
+
+.product-info {
+	padding: 10px;
+}
+
+.product-name {
+	font-weight: bold;
+	font-size: 16px;
+	color: #333;
+	height: 40px;
+}
+
+.product-price {
+	color: #e74c3c;
+	font-size: 14px;
+	margin-top: 5px;
+}
+
+.product-check {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 20px;
+	height: 20px;
+}
+
+#totalPrice {
+	font-size: 20px;
+	font-weight: bold;
+	color: #2c3e50;
+	text-align: center;
+}
+</style>
+
+<script th:inline="javascript">
+    function calculateTotal() {
+        const selected = JSON.parse(localStorage.getItem("selectedItems") || "[]");
+        let total = 0;
+        selected.forEach(item => {
+            total += item.price;
+        });
+        document.getElementById("totalPrice").textContent = total.toLocaleString() + " 원";
+    }
+
+    async function submitPayment() {
+        const response = await fetch("/api/check-login-status");
+        const data = await response.json();
+
+        if (!data.loggedIn) {
+            alert("로그인 후 결제해 주세요.");
+            location.href = "/member/loginForm";
+            return;
+        }
+
+        const selected = JSON.parse(localStorage.getItem("selectedItems") || "[]");
+        if (selected.length === 0) {
+            alert("결제할 상품을 선택해주세요.");
+            return false;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '/pay/payments-store';
+
+        selected.forEach(item => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'seqList';
+            input.value = item.id;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    // ✅ 메인화면 이동 시 선택 초기화
+    function clearSelections() {
+        localStorage.removeItem("selectedItems");
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('input[name="selected"]');
+        let selected = JSON.parse(localStorage.getItem("selectedItems") || "[]");
+
+        checkboxes.forEach(cb => {
+            const matched = selected.find(item => item.id === cb.value);
+            if (matched) {
+                cb.checked = true;
+            }
+
+            cb.addEventListener('change', () => {
+                selected = JSON.parse(localStorage.getItem("selectedItems") || "[]");
+
+                if (cb.checked) {
+                    const exists = selected.find(item => item.id === cb.value);
+                    if (!exists) {
+                        selected.push({
+                            id: cb.value,
+                            price: parseInt(cb.getAttribute("data-price"))
+                        });
+                    }
+                } else {
+                    selected = selected.filter(item => item.id !== cb.value);
+                }
+
+                localStorage.setItem("selectedItems", JSON.stringify(selected));
+                calculateTotal();
+            });
+        });
+
+        calculateTotal();
+    });
+</script>
+</head>
+
+<body>
+	<div class="container">
+		<h2 class="mb-4">스토어 상품목록</h2>
+
+		<div class="product-list-wrapper">
+			<div class="product-list">
+				<div class="product-card" th:each="dto : ${list}">
+					<input type="checkbox" class="product-check" name="selected"
+						th:value="${dto.seq}" th:data-price="${dto.imageprice}">
+					<a th:href="@{/store/store_board_view2(pg=${pg}, seq=${dto.seq})}">
+						<img th:src="@{/storage/{img}(img=${dto.image1})}" th:alt="${dto.imagename}">
+						<div class="product-info">
+							<div class="product-name">[[${dto.imagename}]]</div>
+							<div class="product-price">가격 : [[${dto.imageprice}]] 원</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- 총 합계 금액 표시 -->
+		<div class="text-center mt-4">
+			선택 상품 총 금액: <span id="totalPrice">0 원</span>
+		</div>
+
+		<!-- 결제 버튼 -->
+		<div class="text-center mt-3">
+			<button class="btn btn-success btn-lg" onclick="submitPayment()">선택상품 결제하기</button>
+		</div>
+
+		<!-- 페이징 -->
+		<nav class="mt-4">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" th:if="${startPage > 3}">
+					<a class="page-link" th:href="@{/store/store_board_list2(pg=${startPage-1})}">이전</a>
+				</li>
+				<li class="page-item" th:each="i : ${#numbers.sequence(startPage, endPage)}"
+					th:classappend="${pg == i} ? 'active'">
+					<a class="page-link" th:href="@{/store/store_board_list2(pg=${i})}">[[${i}]]</a>
+				</li>
+				<li class="page-item" th:if="${endPage < totalP}">
+					<a class="page-link" th:href="@{/store/store_board_list2(pg=${endPage+1})}">다음</a>
+				</li>
+			</ul>
+		</nav>
+
+		<!-- ✅ 메인으로 가면 선택 초기화됨 -->
+		<div class="text-end mt-4">
+			<a href="/main" class="btn btn-primary" onclick="clearSelections()">메인화면</a>
+		</div>
+	</div>
+</body>
+</html>

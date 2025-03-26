@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script type="text/javascript">
+	function isDelete() {
+		if (confirm("정말 삭제하시겠습니까?")) {
+			location.href = "/stillcut/stillcut_delete?pg=[[${pg}]]&moviecode=[[${moviecode}]]&movie_stillcut_code=[[${stillcut.movie_stillcut_code}]]";
+		}
+	}
+</script>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<div class="container">
+	<table class="table" style="width: 800px; margin: auto;">
+		<tr align="center">
+			<td colspan="2">
+				<img alt="" th:src="@{/storage/} + ${stillcut.stillcut_src}">
+			</td>
+		</tr>
+		<tr align="center">
+			<td width="100">사진 제목</td>
+			<td>[[${stillcut.stillcut_name}]]</td>
+		</tr>
+		<tr align="center">
+			<td>영화</td>
+			<td>[[${info.title}]]</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input type="button" value="목록"
+				 th:onclick="location.href='/stillcut/stillcut_list?pg=[[${pg}]]&moviecode=[[${moviecode}]]'">
+				<input type="button" value="삭제" onclick="isDelete()">
+			</td>
+		</tr>
+	</table>
+</div>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

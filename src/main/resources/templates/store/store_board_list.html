@@ -1,0 +1,55 @@
+
+<style type="text/css">
+.paging {
+	color: blue;
+	text-decoration: none;
+}
+.currentPaging {
+	color: red;
+}
+</style>
+
+<div class="container">
+
+<table border="1" class="table" style="width: 500px;">
+	<tr align="center" class="table-primary">
+		<td>번호</td>
+		<td>이미지</td>
+		<td>상품명</td>
+		<td>단가</td>
+		<td>개수</td>
+	</tr>
+	<tr th:each="dto : ${list}" align="center">
+		<td>[[${dto.seq}]]</td>
+		<td><a th:href="@{/store/store_board_view(pg=${pg}, seq=${dto.seq})}"><img th:alt="${dto.image1}"
+		 th:src="@{/storage/} + ${dto.image1}" width="50" height="50"></a></td>
+		<td>[[${dto.imagename}]]</td>
+		<td>[[${dto.imageprice}]]</td>
+		<td>[[${dto.imageqty}]]</td>
+	</tr>
+	<tr align="center">
+		<td colspan="5">
+			<span th:if="${startPage > 3}">
+				<a th:href="@{/store/store_board_list(pg=${startPage-1})}"
+				 class="paging">[이전]</a>
+			</span>
+			<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+				<span th:if="${pg == i}">
+					[<a th:href="@{/store/store_board_list(pg=${i})}"
+					 class="currentPaging">[[${i}]]</a>]
+				</span>
+				<span th:if="${pg != i}">
+					[<a th:href="@{/store/store_board_list(pg=${i})}"
+					 class="paging">[[${i}]]</a>]
+				</span>				
+			</span>
+			<span th:if="${endPage < totalP}">
+				<a th:href="@{/store/store_board_list(pg=${endPage+1})}"
+				 class="paging">[다음]</a>
+			</span>
+		</td>
+	</tr>
+</table>
+<a href="/store/store_board_writeForm">새글쓰기</a>
+</div>
+

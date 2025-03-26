@@ -1,0 +1,81 @@
+
+<script type="text/javascript">
+function checkBoardWrite() {
+	var frm = document.form1;
+	
+	if (!frm.subject.value) {
+		alert("제목을 입력해주세요");
+		frm.subject.focus();
+		return false;
+	}
+	
+	if (!frm.content.value) {
+		alert("내용을 입력해주세요");
+		frm.content.focus();
+		return false;
+	}
+	
+	if (!frm.section.value) {
+		alert("종류를 선택해주세요")
+		return false;
+	}
+	
+	frm.submit();
+}
+</script>
+
+
+<div class="container">
+	<h2>관리자 공지사항 수정</h2>
+	<form action="/qna/qna_board_modify" name="form1" method="post">
+		<input type="hidden" name="pg" th:value="${pg}">
+		<input type="hidden" name="seq" th:value="${seq}">
+		<table class="table" style="width: 450px;">
+			<tr align="center">
+				<th width="100">제목</th>
+				<td width="350"><input type="text" name="subject"
+				 size="44" th:value="${board.subject}"></td>
+			</tr>
+			<tr align="center">
+				<th>내용</th>
+				<td><textarea rows="10" cols="45" name="content">[[${board.content}]]</textarea></td>
+			</tr>
+			<tr align="right">
+				<th colspan="2">
+					<input type="button" value="글수정" onclick="checkBoardWrite()">
+					<input type="reset" value="다시 작성">
+				</th>
+			</tr>
+			<tr align="center">
+				<td colspan="2">
+					<label>공지 종류 : </label>
+					<th:block th:if="${board.section == '[예매관람권]'}">
+						<input type="radio" name="section" value="[예매관람권]" checked>
+						<label>[예매관람권]</label>
+						<input type="radio" name="section" value="[영화관이용]">
+						<label>[영화관이용]</label>
+						<input type="radio" name="section" value="[홈페이지]">
+						<label>[홈페이지]</label>				
+					</th:block>
+					<th:block th:if="${board.section == '[영화관이용]'}">
+						<input type="radio" name="section" value="[예매관람권]">
+						<label>[예매관람권]</label>
+						<input type="radio" name="section" value="[영화관이용]" checked>
+						<label>[영화관이용]</label>
+						<input type="radio" name="section" value="[홈페이지]">
+						<label>[홈페이지]</label>				
+					</th:block>
+					<th:block th:if="${board.section == '[홈페이지]'}">
+						<input type="radio" name="section" value="[예매관람권]">
+						<label>[예매관람권]</label>
+						<input type="radio" name="section" value="[영화관이용]">
+						<label>[영화관이용]</label>
+						<input type="radio" name="section" value="[홈페이지]" checked>
+						<label>[홈페이지]</label>				
+					</th:block>					
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</div>

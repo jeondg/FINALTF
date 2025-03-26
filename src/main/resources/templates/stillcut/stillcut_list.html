@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style type="text/css">
+.paging {
+	color: blue;
+	text-decoration: none;
+}
+.currentPaging {
+	color: red;
+}
+</style>
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+
+<div class="container">
+    <h2 class="text-center">영화 사진 목록</h2>
+    <div class="row">
+        <div th:each="dto : ${list}" class="col-md-4 mb-4">
+            <div class="card">
+                <img width="250" height="250" class="card-img-top" alt="영화스틸컷" th:src="@{/storage/} + ${dto.stillcut_src}">
+                <div class="card-body text-center">
+                    <h5 class="card-title">[[${dto.stillcut_name}]]</h5>
+                    <a th:href="@{/stillcut/stillcut_view(pg=${pg}, moviecode=${moviecode}, movie_stillcut_code=${dto.movie_stillcut_code})}" class="btn btn-primary">자세히보기</a>
+                </div>
+                <div class="card-footer text-center">
+                    <button class="btn btn-danger">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <span th:if="${startPage > 3}">
+            <a th:href="@{/stillcut/stillcut_list(pg=${startPage-1}, moviecode=${moviecode})}" class="btn btn-light">[이전]</a>
+        </span>
+        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <a th:href="@{/stillcut/stillcut_list(pg=${i}, moviecode=${moviecode})}" 
+               th:classappend="${pg == i} ? 'btn btn-primary' : 'btn btn-light'">[[${i}]]</a>
+        </span>
+        <span th:if="${endPage < totalP}">
+            <a th:href="@{/stillcut/stillcut_list(pg=${endPage+1}, moviecode=${moviecode})}" class="btn btn-light">[다음]</a>
+        </span>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a th:href="@{/stillcut/stillcut_writeForm(pg=${pg}, moviecode=${moviecode})}" class="btn btn-success">사진 등록</a>
+    </div>
+</div>
+
+<div th:replace="~{layouts/footer}"></div>
+
+</body>
+</html>

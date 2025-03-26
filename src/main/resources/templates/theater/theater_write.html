@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" th:inline="javascript">
+
+window.onload = function() {
+	var theater_result = /*[[${theater_result}]]*/ null;
+	var result = /*[[${result}]]*/ "";
+	setTimeout(function() {
+		if (theater_result != null) {
+			alert(result);
+			location.href = "/theater/theater_list";			
+		} else {
+			alert(result);
+			history.back();		
+		}
+	}, 100)
+}
+ 
+</script>
+</head>
+<body>
+
+	<p>[[${fileName}]]</p>
+	<!--/* ResourceConfiguration 클래스에 설정된 경로를 읽어와서 사용한다. */-->
+	<img alt="이미지" th:src="@{/storage/} + ${fileName}" width="500" height="500">
+
+</body>
+</html>
